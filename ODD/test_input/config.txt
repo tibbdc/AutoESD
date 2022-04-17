@@ -6,7 +6,6 @@ max_verify_2_up_ponit=130
 min_verify_2_up_ponit=80
 max_verify_2_down_ponit=130
 min_verify_2_down_ponit=80
-marker_removal=No
 insert_primer_opt_tm=60.0
 insert_primer_min_tm=55.0
 insert_primer_max_tm=65.0

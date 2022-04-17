@@ -866,7 +866,7 @@ def generate_visualize_file(key1,dict_input_seq,plasmidseq,screeningmarker_seq,c
         }
     )
     visualize_list.append(tmp)
-
+    '''
     # 3. verify1 visualize
     # 有质粒，才有v1
     if plasmidseq:
@@ -968,7 +968,7 @@ def generate_visualize_file(key1,dict_input_seq,plasmidseq,screeningmarker_seq,c
             }
         )
         visualize_list.append(tmp)
-    
+    '''
     # 4. verify2 visualize
     # v2_seq = dict_input_seq["uha_upstream"]+ targetseq[:seq_uha_left_point] + uha + alt + dha + targetseq[seq_dha_right_point + 1 :]  + dict_input_seq["dha_downstream"]
     v2_seq = dict_input_seq["uha_upstream"]+ targetseq + dict_input_seq["dha_downstream"]
