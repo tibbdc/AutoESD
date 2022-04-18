@@ -9,13 +9,13 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--technology', '-t', help='choose the target technology pipeline', choices=["PSS","PDS","FDS","FDD","ODD"], required=True)
-    parser.add_argument('--input', '-i', help='input sequences file', required=True)
+    parser.add_argument('--input', '-i', help='input file for target manipulations', required=True)
     parser.add_argument('--ref', '-r', help='reference genome', required=True)
     parser.add_argument('--dir', '-d', help='outputdir', required=True)
     parser.add_argument('--conf', '-c', help='config', required=True)
     parser.add_argument('--plasmid', '-p', help='plasmid file, must be provided in PSS, PDS.', required=False)
     parser.add_argument('--screeningmarker', '-s', help='screening marker seq file, must be provided in PDS, FDS, FDD, ODD.', required=False)
-    parser.add_argument('--ustp', '-u', help='user specific test primer', required=False)
+    parser.add_argument('--ustp', '-u', help='user-specified test primer', required=False)
     parser.add_argument('--smr', '-m', help='screening maker removal', choices=["No","Yes"],required=False)
 
     parser.add_argument(
