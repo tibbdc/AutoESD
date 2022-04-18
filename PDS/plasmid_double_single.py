@@ -523,9 +523,9 @@ def verify1PrimerAttribute(ID,dict_verify1_primers,seq_verify1_temp,assigned_tp1
     seq_verify1_left_point=seq_verify1_temp.find(verify1_left_primer)
     if assigned_tp1_seq:
         rev_assigned_tp1_seq=revComp(assigned_tp1_seq)
-        seq_verify1_right_point=seq_verify1_temp.find(assigned_tp1_seq)+len(assigned_tp1_seq)-1
+        seq_verify1_right_point=seq_verify1_temp.find(rev_assigned_tp1_seq)+len(assigned_tp1_seq)-1
         seqverify1=seq_verify1_temp[seq_verify1_left_point:seq_verify1_right_point+1]
-        dict_verify1_primer_attribute['PRIMER_RIGHT_0_SEQUENCE']=rev_assigned_tp1_seq
+        dict_verify1_primer_attribute['PRIMER_RIGHT_0_SEQUENCE']=assigned_tp1_seq
         dict_verify1_primer_attribute['PRIMER_RIGHT_0_TM']=primer3.calcTm(assigned_tp1_seq)
         dict_verify1_primer_attribute['PRIMER_RIGHT_TM_HOMODIMER']=primer3.calcHomodimer(assigned_tp1_seq).tm
         dict_verify1_primer_attribute['PRIMER_PAIR_TM_HETERODIMER']=primer3.calcHeterodimer(verify1_left_primer,assigned_tp1_seq).tm
