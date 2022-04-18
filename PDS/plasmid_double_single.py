@@ -1286,7 +1286,7 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
                         dict_inserted_primers_attribute
                         )
     #print(dict_primers_whole['successful']['dha'])
-    # 保存文件
+    # save result files
     blast_input_file.close()
     primer_order_fsave.close()
     visualize_fsave.close()
