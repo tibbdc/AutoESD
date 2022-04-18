@@ -85,7 +85,7 @@ def blast_search(input_file_path,genome,workdir):
                     "start":start,
                     "unique_mapped":1 if (int(float(identity)) == 100 and int(float(allength))==fasta_length_dict[key]) else 0,
                     "mapped":1,
-                    "reverse_mapped":1 if (int(start) > int(end) and int(float(identity)) == 100 and allength==fasta_length_dict[key]) else 0,
+                    "reverse_mapped":1 if (int(start) > int(end) and int(float(identity)) == 100 and int(float(allength))==fasta_length_dict[key]) else 0,
                     "description":'%s:%s-%s;' %(chrom,start,end),
                 }
             else:
@@ -178,15 +178,18 @@ def input_to_primer_template(input_file_path,genome,config,workdir):
                     error_message = "The upstream sequence of " + mun_id + " can not be uniquely mapped to the target genome. Please check whether the target sequence is located on the target genome."
                     print(error_message)
                     return error_message
-                elif blast_search_dict[mun_id]["reverse_mapped"]:
-                    # 反义链
-                    error_message = "The upstream sequence of " + mun_id + " can be mapped to the antisense strand, %s. Please rightly prepare input file for target manipulation as the example of 2,3-BD." % blast_search_dict[mun_id]["description"]
-                    print(error_message)
-                    return error_message
                 elif blast_search_dict[mun_id]["unique_mapped"] == 1:
                     # 开始突变的碱基在genome上的索引
-                    record = str(record_dict[blast_search_dict[mun_id]["chrom"]].seq)
-                    upstream_start_index = int(blast_search_dict[mun_id]["start"])-1
+                    if blast_search_dict[mun_id]["reverse_mapped"]:
+                        record = revComp(str(record_dict[blast_search_dict[mun_id]["chrom"]].seq))
+                        upstream_start_index = len(record) - int(blast_search_dict[mun_id]["start"])
+                        # record=str(record_dict[blast_search_dict[mun_id]["chrom"]].seq).translate(str.maketrans('ACGTacgtRYMKrymkVBHDvbhd', 'TGCAtgcaYRKMyrkmBVDHbvdh'))
+                        # mutation_pos_index = int(blast_search_dict[mun_id]["start"])
+                        strand = "minus"
+                    else:
+                        record = str(record_dict[blast_search_dict[mun_id]["chrom"]].seq)
+                        upstream_start_index = int(blast_search_dict[mun_id]["start"])-1
+                        strand = "plus"
                     mutation_pos_index = upstream_start_index + len(upstream)
                     mutation_pos_ref = record[mutation_pos_index].upper()
                     # length 
@@ -223,6 +226,9 @@ def input_to_primer_template(input_file_path,genome,config,workdir):
                                 "seq_altered":alt,
                                 "type":mutation_type,
                                 "ref": ref,
+                                "strand":strand,
+                                "mutation_pos_index":mutation_pos_index,
+                                "geneid":blast_search_dict[mun_id]["chrom"],
                             }
                             if len(alt)<=length_threshold_msddsc:
                                 primer_template[mun_id]["level"]="<=length_homologous_sequence"
@@ -464,6 +470,9 @@ def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_
                         "seq_altered":,
                         "type":,
                         "ref":,
+                        "strand":,
+                        "mutation_pos_index":,
+                        "geneid":,
                     }
         screeningmarker_seq[str]: screeningmarker_seq sequence
         config[dict]: points information
@@ -488,6 +497,9 @@ def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_
     dha = dict_input_seq["seq_dha"]
     ref = dict_input_seq["ref"]
     alt = dict_input_seq["seq_altered"]
+    strand = dict_input_seq["strand"]
+    geneid = dict_input_seq["geneid"]
+    mutation_pos_index = dict_input_seq["mutation_pos_index"]
     # visualize json
     visualize_list = []
 
@@ -833,6 +845,9 @@ def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_
         dict_verify1['PRIMER_RIGHT_0_SEQUENCE'],
         dict_verify2['PRIMER_LEFT_0_SEQUENCE'],
         dict_verify2['PRIMER_RIGHT_0_SEQUENCE'],
+        strand,
+        geneid,
+        str(mutation_pos_index),
     ]
     fsave.write(
         '\t'.join(linelist) + "\n"
@@ -857,7 +872,7 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
     primer_order_fsave =  open(primer_order_file_path,'w')
     visualize_fsave =  open(visualize_file_path,'w')
     # write visualize file header
-    headers = ['seqid','ref','alt',"manipulation","primer-5","primer-6","primer-7","primer-8","test-primer-1","test-primer-2","test-primer-3","test-primer-4"]
+    headers = ['seqid','ref','alt',"manipulation","primer-5","primer-6","primer-7","primer-8","test-primer-1","test-primer-2","test-primer-3","test-primer-4","strand","geneid","mutation_pos_index",]
     visualize_fsave.write(
         '\t'.join(headers) + "\n"
     )
