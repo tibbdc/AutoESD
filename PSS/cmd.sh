@@ -1,1 +1,1 @@
-python plasmid_single_single.py -i test_input/plasmid_single_single_input_test.csv  -p test_input/plasmid_seq.txt -r test_input/ASM1132v1.fna  -c test_input/config.txt -d test_output
+python plasmid_single_single.py -i test_input/PSS_cgl_input_example.csv  -p test_input/PSS_cgl_linear_plasmid.txt -r test_input/Cg_13032.fna  -c test_input/config.txt -d test_output

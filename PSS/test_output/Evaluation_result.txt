@@ -1,4 +1,4 @@
 ID	Warning
-Cgl0006_1176_90_ins	The target sequence can map to multiple positions in the reference genome. The genome editing may be mislocated.
-Cgl0006_cds_del	The target sequence can map to multiple positions in the reference genome. The genome editing may be mislocated.
-Cgl0006_Cgl0005_sub	The target sequence can map to multiple positions in the reference genome. The genome editing may be mislocated.
+Cgl0591_-1_Ppgk_promoter_ins	The target sequence can map to multiple positions in the reference genome. The genome editing may be mislocated.
+Cgl0141_cds_del	The target sequence can map to multiple positions in the reference genome. The genome editing may be mislocated.
+Cgl0851_ecoli_pgi_sub	The target sequence can map to multiple positions in the reference genome. The genome editing may be mislocated.

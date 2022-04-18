@@ -1,1 +1,1 @@
-python plasmid_double_single.py -i test_input/plasmid_double_single_input_test.csv -s test_input/screening_marker_seq.txt -r test_input/ASM1132v1.fna -p test_input/plasmid_seq.txt -c test_input/config.txt -d test_output -u "AGTTGCTGTGGCGGAAAGCC" -m "No"
+python plasmid_double_single.py -i test_input/PDS_bsu_input_example.csv -s test_input/PDS_bsu_screening_marker.txt -r test_input/bsu_168_upp_del.fna -p test_input/PDS_bsu_linear_plasmid.txt -c test_input/config.txt -d test_output -u "AGCTACACGCTGTCTTGCTTC" -m "No"
