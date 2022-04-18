@@ -17,7 +17,7 @@ pip install -r requirements.txt
 ```shell
 wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.13.0+-x64-linux.tar.gz -O ~/ncbi-blast-2.13.0+-x64-linux.tar.gz
 
-tar zxvf ncbi-blast-2.13.0+-x64-linux.tar.gz
+tar -zxvf ncbi-blast-2.13.0+-x64-linux.tar.gz
 
 export PATH=~/ncbi-blast-2.13.0+/bin:$PATH
 
