@@ -33,7 +33,7 @@ python autoesd.py -h
 ### PSS
 This moudle is used for implementing the editing sequences design for plasmid-mediated single/single crossover HR technical variant.
 
-"plasmid_single_single.py" is the design program.
+"plasmid_single_single.py" is the design program which can also be used alone as a standalone script.
 
 "config.txt" is the parameter setting file.
 
@@ -47,7 +47,7 @@ python autoesd.py -t PSS -i ./PSS/test_input/PSS_cgl_input_example.csv  -p ./PSS
 ### FDS
 This moudle is used for implementing the editing sequences design for fragment-mediated double/single crossover HR technical variant.
 
-"fragment_double_single.py" is the design program.
+"fragment_double_single.py" is the design program which can also be used alone as a standalone script.
 
 "config.txt" is the parameter setting file.
 
@@ -61,7 +61,7 @@ python autoesd.py -t FDS -i ./FDS/test_input/FDS_eco_input_example.csv  -s ./FDS
 ### PDS
 This moudle is used for implementing the editing sequences design for plasmid-mediated double/single crossover HR technical variant.
 
-"plasmid_double_single.py" is the design program.
+"plasmid_double_single.py" is the design program which can also be used alone as a standalone script.
 
 "config.txt" is the parameter setting file.
 
@@ -75,7 +75,7 @@ python autoesd.py -t PDS -i ./PDS/test_input/PDS_bsu_input_example.csv -s ./PDS/
 ### FDD
 This moudle is used for implementing the editing sequences design for fragment-mediated double/double crossover HR technical variant.
 
-"fragment_double_double.py" is the design program.
+"fragment_double_double.py" is the design program which can also be used alone as a standalone script.
 
 "config.txt" is the parameter setting file.
 
@@ -89,7 +89,7 @@ python autoesd.py -t FDD -i ./FDD/test_input/FDD_eco_input_example.csv  -s ./FDD
 ### ODD
 This moudle is used for implementing the editing sequences design for oligonucleotide-mediated double/double crossover HR technical variant.
 
-"oligonucleotide_double_double.py" is the design program.
+"oligonucleotide_double_double.py" is the design program which can also be used alone as a standalone script.
 
 "config.txt" is the parameter setting file.
 
