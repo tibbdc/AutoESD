@@ -39,7 +39,8 @@ This moudle is used for implementing the editing sequences design for plasmid-me
 
 The input files include the "Target genome" ("Cg_13032.fna"), the "Linear plasmid sequence" ("PSS_cgl_linear_plasmid.txt") and the "Target manipulations" ("PSS_cgl_input_example.csv").
 
-The output files include the detailed information of the designed primers ("Design_results.xlsx"), the tasks without accessible primers and their failure reasons ("Failed_task.xlsx"), the list of primers provided to the primer synthesis company ("Primer_order.xlsx"), and the target sequences that can be mapped to multiple loci in the target genome and may lead to potential off-target events ("Evaluation_result.xlsx")
+The output files include the detailed information of the designed primers ("Design_results.xlsx"), the tasks without accessible primers and their failure reasons ("Failed_task.xlsx"), the list of primers provided to the primer synthesis company ("Primer_order.xlsx"), and the target sequences that can be mapped to multiple loci in the target genome and may lead to potential off-target events ("Evaluation_result.xlsx").
+
 The series of ".json" files are used for visualization of the results.
 
 Calculation for the example design tasks can be performed by running "cmd.sh" or run the following command in the root path:
@@ -56,7 +57,8 @@ This moudle is used for implementing the editing sequences design for fragment-m
 
 The input files include the "Target genome" ("Ec_MG1655.fna"), the "Screening marker sequence" ("FDS_eco_screening_marker.txt") and the "Target manipulations" ("FDS_eco_input_example.csv").
 
-The output files include the detailed information of the designed primers ("Design_results.xlsx"), the tasks without accessible primers and their failure reasons ("Failed_task.xlsx"), the list of primers provided to the primer synthesis company ("Primer_order.xlsx"), and the target sequences that can be mapped to multiple loci in the target genome and may lead to potential off-target events ("Evaluation_result.xlsx")
+The output files include the detailed information of the designed primers ("Design_results.xlsx"), the tasks without accessible primers and their failure reasons ("Failed_task.xlsx"), the list of primers provided to the primer synthesis company ("Primer_order.xlsx"), and the target sequences that can be mapped to multiple loci in the target genome and may lead to potential off-target events ("Evaluation_result.xlsx").
+
 The series of ".json" files are used for visualization of the results.
 
 Calculation for the example design tasks can be performed by running "cmd.sh" or run the following command in the root path:
@@ -73,7 +75,8 @@ This moudle is used for implementing the editing sequences design for plasmid-me
 
 The input files include the "Target genome" ("bsu_168_upp_del.fna"), the "Linear plasmid sequence" ("PDS_bsu_linear_plasmid.txt"), the "Screening marker sequence" ("PDS_bsu_screening_marker.txt") and the "Target manipulations" ("PDS_bsu_input_example.csv").
 
-The output files include the detailed information of the designed primers ("Design_results.xlsx"), the tasks without accessible primers and their failure reasons ("Failed_task.xlsx"), the list of primers provided to the primer synthesis company ("Primer_order.xlsx"), and the target sequences that can be mapped to multiple loci in the target genome and may lead to potential off-target events ("Evaluation_result.xlsx")
+The output files include the detailed information of the designed primers ("Design_results.xlsx"), the tasks without accessible primers and their failure reasons ("Failed_task.xlsx"), the list of primers provided to the primer synthesis company ("Primer_order.xlsx"), and the target sequences that can be mapped to multiple loci in the target genome and may lead to potential off-target events ("Evaluation_result.xlsx").
+
 The series of ".json" files are used for visualization of the results.
 
 Calculation for the example design tasks can be performed by running "cmd.sh" or run the following command in the root path:
@@ -90,7 +93,8 @@ This moudle is used for implementing the editing sequences design for fragment-m
 
 The input files include the "Target genome" ("Ec_MG1655.fna"), the "Screening marker sequence" ("FDD_eco_screening_marker.txt") and the "Target manipulations" ("FDD_eco_input_example.csv").
 
-The output files include the detailed information of the designed primers ("Design_results.xlsx"), the tasks without accessible primers and their failure reasons ("Failed_task.xlsx"), the list of primers provided to the primer synthesis company ("Primer_order.xlsx"), and the target sequences that can be mapped to multiple loci in the target genome and may lead to potential off-target events ("Evaluation_result.xlsx")
+The output files include the detailed information of the designed primers ("Design_results.xlsx"), the tasks without accessible primers and their failure reasons ("Failed_task.xlsx"), the list of primers provided to the primer synthesis company ("Primer_order.xlsx"), and the target sequences that can be mapped to multiple loci in the target genome and may lead to potential off-target events ("Evaluation_result.xlsx").
+
 The series of ".json" files are used for visualization of the results.
 
 Calculation for the example design tasks can be performed by running "cmd.sh" or run the following command in the root path:
@@ -107,7 +111,8 @@ This moudle is used for implementing the editing sequences design for oligonucle
 
 The input files include the "Target genome" ("Ec_MG1655.fna"), the "Screening marker sequence" ("ODD_eco_screening_marker.txt") and the "Target manipulations" ("ODD_eco_input_example.csv").
 
-The output files include the detailed information of the designed primers ("Design_results.xlsx"), the tasks without accessible primers and their failure reasons ("Failed_task.xlsx"), the list of primers provided to the primer synthesis company ("Primer_order.xlsx"), and the target sequences that can be mapped to multiple loci in the target genome and may lead to potential off-target events ("Evaluation_result.xlsx")
+The output files include the detailed information of the designed primers ("Design_results.xlsx"), the tasks without accessible primers and their failure reasons ("Failed_task.xlsx"), the list of primers provided to the primer synthesis company ("Primer_order.xlsx"), and the target sequences that can be mapped to multiple loci in the target genome and may lead to potential off-target events ("Evaluation_result.xlsx").
+
 The series of ".json" files are used for visualization of the results.
 
 Calculation for the example design tasks can be performed by running "cmd.sh" or run the following command in the root path:
