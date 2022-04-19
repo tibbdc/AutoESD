@@ -2,9 +2,7 @@
 
 ## Introduction
 
-```shell
-# AutoESDv1 enables users to perform the precise, automated and high-throughput design of sequence manipulation tasks across species and technical variations, at any genomic locus for all manipulation types with adequate sequence length. The screening-marker-based homologous-recombination system and the overlap-based assembly method were chosen as the loading techniques. Homologous arms and primers required for sequence manipulation, vector DNA assembly and sequencing verification were provided as design results.
-```
+AutoESDv1 enables users to perform the precise, automated and high-throughput design of sequence manipulation tasks across species and technical variations, at any genomic locus for all manipulation types with adequate sequence length. The screening-marker-based homologous-recombination system and the overlap-based assembly method were chosen as the loading techniques. Homologous arms and primers required for sequence manipulation, vector DNA assembly and sequencing verification were provided as design results.
 
 ## Installation
 
