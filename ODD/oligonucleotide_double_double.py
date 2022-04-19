@@ -65,7 +65,7 @@ def blast_search(input_file_path,genome,workdir):
     SeqIO.write(my_records, input_fasta, "fasta")
     # run blast
     os.system("makeblastdb -in "+genome+" -dbtype nucl -parse_seqids -out "+ref_lib)
-    os.system("blastn -query "+input_fasta+" -db "+ref_lib+" -outfmt 6 -out "+blast_output_file_path+" -evalue 1e-30 ")
+    os.system("blastn -query "+input_fasta+" -db "+ref_lib+" -outfmt 6 -task blastn -out "+blast_output_file_path+" -evalue 1e-30 ")
 
     # return
     dictall = {}
@@ -99,6 +99,86 @@ def blast_search(input_file_path,genome,workdir):
                     dictall[key]["description"] += '%s:%s-%s;' %(chrom,start,end)
     return dictall
 
+def create_mutation_info(record,mutation_type,mutation_pos_index,ref,alt,strand,chrom,name,mun_id,config):
+    """
+    Arguments:
+        record[str]: mutation site located genome
+        mutation_type[str]: deletion insertion substitution
+        mutation_pos_index[int]:  mutation_pos_index information
+        ref[str]:  mutation_pos_index ref
+        alt[str]: alter sequence
+        strand[str]:  + plus   - minus
+        chrom[str]:  mutation site located genome name
+        name[str]: mutation name
+        mun_id[str]: mutation id
+        config[dict]:  information
+    Return [dict]
+        {
+            "seq_uha_max_whole":"",
+            "seq_dha_max_whole":"",
+            "seq_altered":"",
+            "type":"",   # [substitution,deletion,insertion]
+            "ref":"",
+            "uha_upstream": seq_uha_max_whole  up 100bp  sequence,
+            "dha_downstream":seq_dha_max_whole  down 100bp sequence,
+        }
+    
+    """
+    left_arm_seq_length=int(config['left_arm_seq_length'])
+    right_arm_seq_length=int(config['right_arm_seq_length'])
+    # 如果未上传质粒，max_verify_1_up_ponit max_verify_2_down_ponit为0
+    max_verify_up_ponit=int(config['max_verify_2_up_ponit'])
+    max_verify_down_ponit=int(config['max_verify_2_down_ponit'])
+    length_threshold_msddsc=int(config['length_threshold_msddsc'])
+
+    # length 
+    if mutation_pos_index - left_arm_seq_length - max_verify_up_ponit < 0:
+        error_message = "The length of upstream sequence of manipulation site of " + mun_id + " must be larger than sum of 'Max Length of UHA' and 'Max Length of UIS'."
+        # print(error_message)
+        return error_message
+    else:
+        if mutation_type not in ["insertion","deletion","substitution"]:
+            error_message = "The target manipulation type of " + mun_id + " must be equal to 'insertion,substitution or deletion', Please rightly prepare input file for target manipulation as the example of 2,3-BD."
+            # print(error_message)
+            return  error_message
+        elif mutation_type == "insertion":
+            ref = ""
+        elif mutation_type == "deletion":
+            alt = ""
+        genome_ref = record[mutation_pos_index:mutation_pos_index+len(ref)]
+        if genome_ref.upper() == ref.upper():
+            info_dict = {
+                "seq_uha":str(record[
+                    mutation_pos_index - left_arm_seq_length:mutation_pos_index
+                    ]),
+                "seq_uha_verify":str(record[
+                    mutation_pos_index - left_arm_seq_length - max_verify_up_ponit:mutation_pos_index
+                    ]),
+                "seq_dha":str(record[
+                    mutation_pos_index + len(ref)
+                    : mutation_pos_index + len(ref) + right_arm_seq_length
+                    ]),
+                "seq_dha_verify":str(record[
+                    mutation_pos_index + len(ref)
+                    : mutation_pos_index + len(ref) + right_arm_seq_length + max_verify_down_ponit
+                    ]),
+                "seq_altered":alt,
+                "type":mutation_type,
+                "ref": ref,
+                "strand":"plus" if strand == "+" else "minus",
+                "mutation_pos_index":mutation_pos_index,
+                "geneid":chrom,
+                "name":name,
+            }
+            if len(alt)<=length_threshold_msddsc:
+                info_dict["level"]="<=length_homologous_sequence"
+            else:
+                info_dict["level"]=">length_homologous_sequence"
+            return info_dict
+        else:
+            error_message = "The target mutation ref of " + mun_id + " can not be found in reference, please check."
+            return error_message
+
 def input_to_primer_template(input_file_path,genome,config,workdir):
     """
     Arguments:
@@ -130,110 +210,118 @@ def input_to_primer_template(input_file_path,genome,config,workdir):
             }
         }
     """
-    left_arm_seq_length=int(config['left_arm_seq_length'])
-    right_arm_seq_length=int(config['right_arm_seq_length'])
-    # 如果未上传质粒，max_verify_1_up_ponit max_verify_2_down_ponit为0
-    max_verify_up_ponit=int(config['max_verify_2_up_ponit'])
-    max_verify_down_ponit=int(config['max_verify_2_down_ponit'])
-    length_threshold_msddsc=int(config['length_threshold_msddsc'])
     input_format=input_file_path.split('.')[-1]
+
+    with open(input_file_path,'r') as f:
+        input_header = f.readlines()[0]
+        # print(input_header)
+        
     primer_template = {}
-    if input_format != 'csv':
-        error_message = "The input file format needs to be 'csv'"
-        print(error_message)
-        return error_message
-    else:
-        # read genome
-        # record = SeqIO.read(genome, "fasta").seq
-        # record_list = list(SeqIO.parse(genome, "fasta"))
-        record_dict = SeqIO.to_dict(SeqIO.parse(genome, "fasta"))
-        blast_search_dict = blast_search(input_file_path,genome,workdir)
-        df=pd.read_csv(input_file_path)
-        num_lines_df=df.shape[0]
-        for i in range(num_lines_df):
-            data=df.loc[i].values
-            #print(data)
-            mun_id=str(data[0])
-            if len(data) < 5:
-                error_message = "Some necessary input information is missing in the line "+mun_id+" of the input file"
-                print(error_message)
-                return  error_message
-            else:
-                upstream = data[1].strip().upper()
-                ref = data[2]
-                alt = data[3]
-                mutation_type = data[4].strip().lower()
-                if mun_id not in blast_search_dict:
-                    # 没有blast上
-                    error_message = "The upstream sequence of " + mun_id + " can not be mapped to the target genome. please check whether the target sequence is located on the target genome. Please rightly prepare input file for target manipulation as the example of 2,3-BD."
+
+    # blast error file
+    with open(os.path.join(workdir,'error.txt'),'w') as blast_error_handler:
+        blast_error_handler.write('ID\tERROR\n')
+
+        if input_format != 'csv':
+            error_message = "The input file format needs to be 'csv'"
+            print(error_message)
+            return error_message
+        elif 'Sequence upstream' in input_header:
+            record_dict = SeqIO.to_dict(SeqIO.parse(genome, "fasta"))
+            blast_search_dict = blast_search(input_file_path,genome,workdir)
+            df=pd.read_csv(input_file_path)
+            num_lines_df=df.shape[0]
+            for i in range(num_lines_df):
+                data=df.loc[i].values
+                #print(data)
+                mun_id=str(data[0])
+                if len(data) < 5:
+                    error_message = "Some necessary input information is missing in the line "+mun_id+" of the input file"
                     print(error_message)
-                    return error_message
-                elif blast_search_dict[mun_id]["unique_mapped"] > 1:
-                    # 多次比对上 100
-                    error_message = "The upstream sequence of " + mun_id + "  can be mapped to multiple loci in the target genome, %s, Please provide a longer upstream seqeunce." % blast_search_dict[mun_id]["description"]
+                    return  error_message
+                else:
+                    upstream = data[1].strip().upper()
+                    ref = data[2]
+                    alt = data[3]
+                    mutation_type = data[4].strip().lower()
+                    name = mun_id
+                    
+                    if mun_id not in blast_search_dict:
+                        # 没有blast上
+                        error_message = "The upstream sequence of " + mun_id + " can not be mapped to the target genome. please check whether the target sequence is located on the target genome."
+                        blast_error_handler.write(f'{mun_id}\t{error_message}\n')
+                    elif blast_search_dict[mun_id]["unique_mapped"] > 1:
+                        # 多次比对上 100
+                        error_message = "The upstream sequence of " + mun_id + "  can be mapped to multiple loci in the target genome, %s, Please provide a longer upstream seqeunce." % blast_search_dict[mun_id]["description"]
+                        blast_error_handler.write(f'{mun_id}\t{error_message}\n')
+                    elif blast_search_dict[mun_id]["unique_mapped"] == 0:
+                        # 无 100 比对
+                        error_message = "The upstream sequence of " + mun_id + " can not be uniquely mapped to the target genome. Please check whether the target sequence is located on the target genome."
+                        blast_error_handler.write(f'{mun_id}\t{error_message}\n')
+                    elif blast_search_dict[mun_id]["unique_mapped"] == 1:
+                        # 开始突变的碱基在genome上的索引
+                        if blast_search_dict[mun_id]["reverse_mapped"]:
+                            record = revComp(str(record_dict[blast_search_dict[mun_id]["chrom"]].seq))
+                            upstream_start_index = len(record) - int(blast_search_dict[mun_id]["start"])
+                            strand = "-"
+                        else:
+                            record = str(record_dict[blast_search_dict[mun_id]["chrom"]].seq)
+                            upstream_start_index = int(blast_search_dict[mun_id]["start"])-1
+                            strand = "+"
+                        chrom = blast_search_dict[mun_id]["chrom"]
+                        mutation_pos_index = upstream_start_index + len(upstream)
+                        # get mutation info dict
+                        res = create_mutation_info(
+                            record,mutation_type,mutation_pos_index,
+                            ref,alt,strand,chrom,
+                            name,mun_id,config
+                            )
+                        if isinstance(res,str):
+                            blast_error_handler.write(f'{mun_id}\t{res}\n')
+                        else:
+                            primer_template[mun_id] = res
+        elif 'Chr,Pos,Strand' in input_header:
+            # input type 2: vcf
+            print('processing vcf input file ...')
+            record_dict = SeqIO.to_dict(SeqIO.parse(genome, "fasta"))
+            df=pd.read_csv(input_file_path)
+            num_lines_df=df.shape[0]
+            for i in range(num_lines_df):
+                data=df.loc[i].values
+                #print(data)
+                mun_id=str(data[0])
+                if len(data) < 7:
+                    error_message = "Some necessary input information is missing in the line "+mun_id+" of the input file"
                     print(error_message)
-                    return error_message
-                elif blast_search_dict[mun_id]["unique_mapped"] == 0:
-                    # 无 100 比对
-                    error_message = "The upstream sequence of " + mun_id + " can not be uniquely mapped to the target genome. Please check whether the target sequence is located on the target genome."
-                    print(error_message)
-                    return error_message
-                elif blast_search_dict[mun_id]["unique_mapped"] == 1:
-                    # 开始突变的碱基在genome上的索引
-                    if blast_search_dict[mun_id]["reverse_mapped"]:
-                        record = revComp(str(record_dict[blast_search_dict[mun_id]["chrom"]].seq))
-                        upstream_start_index = len(record) - int(blast_search_dict[mun_id]["start"])
-                        # record=str(record_dict[blast_search_dict[mun_id]["chrom"]].seq).translate(str.maketrans('ACGTacgtRYMKrymkVBHDvbhd', 'TGCAtgcaYRKMyrkmBVDHbvdh'))
-                        # mutation_pos_index = int(blast_search_dict[mun_id]["start"])
-                        strand = "minus"
+                    return  error_message
+                else:
+                    chrom = data[1].strip()
+                    pos = data[2]
+                    strand = data[3]
+                    ref = data[4].strip()
+                    alt = data[5]
+                    mutation_type = data[6]
+                    name = mun_id
+
+                    if strand == '+':
+                        record = str(record_dict[chrom].seq)
+                        mutation_pos_index = int(pos) - 1
+                    elif strand == '-':
+                        record = revComp(str(record_dict[chrom].seq))
+                        mutation_pos_index = len(record) - int(pos)
+                    # get mutation info dict
+                    res = create_mutation_info(
+                        record,mutation_type,mutation_pos_index,
+                        ref,alt,strand,chrom,
+                        name,mun_id,config
+                        )
+                    if isinstance(res,str):
+                        blast_error_handler.write(f'{mun_id}\t{res}\n')
                     else:
-                        record = str(record_dict[blast_search_dict[mun_id]["chrom"]].seq)
-                        upstream_start_index = int(blast_search_dict[mun_id]["start"])-1
-                        strand = "plus"
-                    mutation_pos_index = upstream_start_index + len(upstream)
-                    mutation_pos_ref = record[mutation_pos_index].upper()
-                    # length 
-                    if mutation_pos_index - left_arm_seq_length - max_verify_up_ponit < 0:
-                        error_message = "The length of upstream sequence of manipulation site of " + mun_id + " must be larger than sum of 'Max Length of UHA' and 'Max Length of UIS'."
-                        print(error_message)
-                        return error_message
-                    else:
-                        if mutation_type not in ["insertion","deletion","substitution"]:
-                            error_message = "The target manipulation type of " + mun_id + " must be equal to 'insertion,substitution or deletion', Please rightly prepare input file for target manipulation as the example of 2,3-BD."
-                            print(error_message)
-                            return  error_message
-                        elif mutation_type == "insertion":
-                            ref = ""
-                        elif mutation_type == "deletion":
-                            alt = ""
-                        genome_ref = record[mutation_pos_index:mutation_pos_index+len(ref)]
-                        if genome_ref.upper() == ref.upper():
-                            primer_template[mun_id] = {
-                                "seq_uha":str(record[
-                                    mutation_pos_index - left_arm_seq_length:mutation_pos_index
-                                    ]),
-                                "seq_uha_verify":str(record[
-                                    mutation_pos_index - left_arm_seq_length - max_verify_up_ponit:mutation_pos_index
-                                    ]),
-                                "seq_dha":str(record[
-                                    mutation_pos_index + len(ref)
-                                    : mutation_pos_index + len(ref) + right_arm_seq_length
-                                    ]),
-                                "seq_dha_verify":str(record[
-                                    mutation_pos_index + len(ref)
-                                    : mutation_pos_index + len(ref) + right_arm_seq_length + max_verify_down_ponit
-                                    ]),
-                                "seq_altered":alt,
-                                "type":mutation_type,
-                                "ref": ref,
-                                "strand":strand,
-                                "mutation_pos_index":mutation_pos_index,
-                                "geneid":blast_search_dict[mun_id]["chrom"],
-                            }
-                            if len(alt)<=length_threshold_msddsc:
-                                primer_template[mun_id]["level"]="<=length_homologous_sequence"
-                            else:
-                                primer_template[mun_id]["level"]=">length_homologous_sequence"
+                        primer_template[mun_id] = res
+        else:
+            error_message = "The input file format not supported, Please rightly prepare input file for target manipulation as the example of 2,3-BD."
+            return  error_message  
     return primer_template
 
 #Obtain linear plasmid sequence
@@ -460,7 +548,7 @@ def genOutputFile(dict_primers_whole,workdir):
                 pd.read_json(json.dumps(dict_primers_whole[kind][sub_kind])).to_excel(writer_failed, "Failed_task_for_"+sub_kind)
             writer_failed.save()
 
-def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_screeningmarker,dict_verify1,dict_verify2,fsave,workdir,dict_insert={}):
+def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_screeningmarker,dict_verify1,dict_verify2,fsave,workdir,dict_insert={},screening_maker_removal=None):
     """
     Arguments:
         key1[str]: seq id
@@ -473,6 +561,7 @@ def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_
                         "strand":,
                         "mutation_pos_index":,
                         "geneid":,
+                        "name":,
                     }
         screeningmarker_seq[str]: screeningmarker_seq sequence
         config[dict]: points information
@@ -500,6 +589,8 @@ def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_
     strand = dict_input_seq["strand"]
     geneid = dict_input_seq["geneid"]
     mutation_pos_index = dict_input_seq["mutation_pos_index"]
+    name = dict_input_seq["name"]
+
     # visualize json
     visualize_list = []
 
@@ -689,8 +780,8 @@ def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_
     else:
         primer5 =""
         primer6 =""
-
-    visualize_list.append(tmp)
+    if not (screening_maker_removal == "No" and mutation_type == "deletion"):
+        visualize_list.append(tmp)
     
     # 4. verify1 visualize
     # verify1 验证
@@ -821,7 +912,8 @@ def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_
             'color':'orange',
         }
     )
-    visualize_list.append(tmp)
+    if not (screening_maker_removal == "No" and mutation_type == "deletion"):
+        visualize_list.append(tmp)
     
     # write to json
     json_file = os.path.join(
@@ -837,17 +929,18 @@ def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_
         ref,
         alt,
         mutation_type,
-        primer5,
-        primer6,
+        primer5 if not (screening_maker_removal == "No" and mutation_type == "deletion") else "",
+        primer6 if not (screening_maker_removal == "No" and mutation_type == "deletion") else "",
         primer7,
         primer8,
         dict_verify1['PRIMER_LEFT_0_SEQUENCE'],
         dict_verify1['PRIMER_RIGHT_0_SEQUENCE'],
-        dict_verify2['PRIMER_LEFT_0_SEQUENCE'],
-        dict_verify2['PRIMER_RIGHT_0_SEQUENCE'],
+        dict_verify2['PRIMER_LEFT_0_SEQUENCE'] if not (screening_maker_removal == "No" and mutation_type == "deletion") else "",
+        dict_verify2['PRIMER_RIGHT_0_SEQUENCE'] if not (screening_maker_removal == "No" and mutation_type == "deletion") else "",
         strand,
         geneid,
         str(mutation_pos_index),
+        name,
     ]
     fsave.write(
         '\t'.join(linelist) + "\n"
@@ -872,7 +965,7 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
     primer_order_fsave =  open(primer_order_file_path,'w')
     visualize_fsave =  open(visualize_file_path,'w')
     # write visualize file header
-    headers = ['seqid','ref','alt',"manipulation","primer-5","primer-6","primer-7","primer-8","test-primer-1","test-primer-2","test-primer-3","test-primer-4","strand","geneid","mutation_pos_index",]
+    headers = ['seqid','ref','alt',"manipulation","primer-5","primer-6","primer-7","primer-8","test-primer-1","test-primer-2","test-primer-3","test-primer-4","strand","geneid","mutation_pos_index","name",]
     visualize_fsave.write(
         '\t'.join(headers) + "\n"
     )
@@ -957,7 +1050,6 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
                             dict_primers_whole['successful']['verify2'].append(dict_verify2_primers_attribute)
                             primers_submitted_output(dict_screening_marker_primers_attribute,dict_verify1_primers_attribute,primer_order_fsave,dict_verify2_primers_attribute)
             # visualize
-            '''
             generate_visualize_file(
                 key1,
                 dict_input_seq[key1],
@@ -969,8 +1061,8 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
                 visualize_fsave,
                 workdir,
                 dict_inserted_primers_attribute,
+                screening_maker_removal
                 )
-            '''
     #print(dict_primers_whole['successful']['dha'])
     # 保存文件
     blast_input_file.close()

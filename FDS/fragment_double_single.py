@@ -65,7 +65,7 @@ def blast_search(input_file_path,genome,workdir):
     SeqIO.write(my_records, input_fasta, "fasta")
     # run blast
     os.system("makeblastdb -in "+genome+" -dbtype nucl -parse_seqids -out "+ref_lib)
-    os.system("blastn -query "+input_fasta+" -db "+ref_lib+" -outfmt 6 -out "+blast_output_file_path+" -evalue 1e-30 ")
+    os.system("blastn -query "+input_fasta+" -db "+ref_lib+" -outfmt 6 -task blastn -out "+blast_output_file_path+" -evalue 1e-30 ")
 
     # return
     dictall = {}
@@ -99,6 +99,192 @@ def blast_search(input_file_path,genome,workdir):
                     dictall[key]["description"] += '%s:%s-%s;' %(chrom,start,end)
     return dictall
 
+def create_mutation_info(record,mutation_type,mutation_pos_index,ref,alt,strand,chrom,name,mun_id,config):
+    """
+    Arguments:
+        record[str]: mutation site located genome
+        mutation_type[str]: deletion insertion substitution
+        mutation_pos_index[int]:  mutation_pos_index information
+        ref[str]:  mutation_pos_index ref
+        alt[str]: alter sequence
+        strand[str]:  + plus   - minus
+        chrom[str]:  mutation site located genome name
+        name[str]: mutation name
+        mun_id[str]: mutation id
+        config[dict]:  information
+    Return [dict]
+        {
+            "seq_uha_max_whole":"",
+            "seq_dha_max_whole":"",
+            "seq_altered":"",
+            "type":"",   # [substitution,deletion,insertion]
+            "ref":"",
+            "uha_upstream": seq_uha_max_whole  up 100bp  sequence,
+            "dha_downstream":seq_dha_max_whole  down 100bp sequence,
+        }
+    
+    """
+    max_left_arm_seq_length=int(config['max_left_arm_seq_length'])
+    max_right_arm_seq_length=int(config['max_right_arm_seq_length'])
+    max_verify_2_up_ponit=int(config['max_verify_2_up_ponit'])
+    max_verify_2_down_ponit=int(config['max_verify_2_down_ponit'])
+    dr_seq_length=int(config['dr_seq_length'])
+    length_threshold_msddsc=int(config['length_threshold_msddsc'])
+
+    # length 
+    if mutation_pos_index - max_left_arm_seq_length < 0:
+        error_message = "The length of upstream sequence of manipulation site of " + mun_id + " must be larger than sum of 'Max Length of UHA' and 'Max Length of UIS'."
+        # print(error_message)
+        return error_message
+    if mutation_type == "deletion":
+        # 先判断用户提供的ref是否与参考基因组ref一致
+        genome_ref = record[mutation_pos_index:mutation_pos_index+len(ref)]
+        if genome_ref.upper() == ref.upper():
+            info_dict = {
+                    "seq_uha_max_whole":str(record[
+                        mutation_pos_index - max_left_arm_seq_length - max_verify_2_up_ponit :mutation_pos_index
+                        ]),
+                    "seq_dha_max_whole":str(record[
+                        mutation_pos_index + len(ref)
+                        : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
+                        ]),
+                    "seq_dr":str(record[
+                        mutation_pos_index - max_left_arm_seq_length:mutation_pos_index
+                        ])[-dr_seq_length:],
+                    "seq_altered": "",
+                    "ref": ref,
+                    "strand":"plus" if strand == "+" else "minus",
+                    "mutation_pos_index":mutation_pos_index,
+                    "geneid":chrom,
+                    "name":name,
+                    "uha_upstream":str(record[
+                        mutation_pos_index 
+                        - max_left_arm_seq_length - max_verify_2_up_ponit -100
+                        : mutation_pos_index 
+                        - max_left_arm_seq_length - max_verify_2_up_ponit
+                        ]),
+                    "dha_downstream":str(
+                        record[
+                            mutation_pos_index + max_right_arm_seq_length + max_verify_2_down_ponit
+                            : mutation_pos_index + max_right_arm_seq_length + max_verify_2_down_ponit + 100
+                        ]),
+                    "level":"del",
+                    "type":mutation_type,
+                }
+            return info_dict
+        else:
+            error_message = "The target mutation ref of " + mun_id + " can not be found in reference, please check."
+            return error_message
+    elif mutation_type in ["insertion","substitution"]:
+        if mutation_type == "insertion":
+            ref = ""
+        genome_ref = record[mutation_pos_index:mutation_pos_index+len(ref)]
+        if genome_ref.upper() == ref.upper():
+            if len(alt)<=dr_seq_length:
+                info_dict = {
+                    "seq_uha_max_whole":str(record[
+                        mutation_pos_index - max_left_arm_seq_length - max_verify_2_up_ponit:mutation_pos_index
+                        ]),
+                    "seq_dha_max_whole":str(record[
+                        mutation_pos_index + len(ref)
+                        : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
+                        ]),
+                    "seq_altered":alt,
+                    "ref": ref,
+                    "strand":"plus" if strand == "+" else "minus",
+                    "mutation_pos_index":mutation_pos_index,
+                    "geneid":chrom,
+                    "name":name,
+                    "seq_dr":str(record[
+                        mutation_pos_index - max_left_arm_seq_length:mutation_pos_index
+                        ]+alt)[-dr_seq_length:],
+                    "uha_upstream":str(record[
+                        mutation_pos_index 
+                        - max_left_arm_seq_length - max_verify_2_up_ponit -100
+                        : mutation_pos_index 
+                        - max_left_arm_seq_length - max_verify_2_up_ponit
+
+                        ]),
+                    "dha_downstream":str(
+                        record[
+                            mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
+                            : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit + 100
+                        ]),
+                    "level":"<30",
+                    "type":mutation_type,
+                }
+                return info_dict
+            elif dr_seq_length<len(alt)<=length_threshold_msddsc:
+                info_dict = {
+                    "seq_uha_max_whole":str(record[
+                        mutation_pos_index - max_left_arm_seq_length - max_verify_2_up_ponit :mutation_pos_index
+                        ]),
+                    "seq_dha_max_whole":str(record[
+                        mutation_pos_index + len(ref)
+                        : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
+                        ]),
+                    "seq_altered" : alt,
+                    "ref": ref,
+                    "strand":"plus" if strand == "+" else "minus",
+                    "mutation_pos_index":mutation_pos_index,
+                    "geneid":chrom,
+                    "name":name,
+                    "seq_dr_uha":alt[:math.ceil((len(alt)+dr_seq_length)/2)],
+                    "seq_dr_dha":alt[math.ceil((len(alt)-dr_seq_length)/2):],
+                    "uha_upstream":str(record[
+                        mutation_pos_index 
+                        - max_left_arm_seq_length - max_verify_2_up_ponit -100
+                        : mutation_pos_index 
+                        - max_left_arm_seq_length - max_verify_2_up_ponit
+                        ]),
+                    "dha_downstream":str(
+                        record[
+                            mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
+                            : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit + 100
+                        ]),
+                    "level":">30&<90",
+                    "type":mutation_type,
+                }
+                return info_dict
+            else:
+                info_dict = {
+                    "seq_uha_max_whole":str(record[
+                        mutation_pos_index - max_left_arm_seq_length - max_verify_2_up_ponit :mutation_pos_index
+                        ]),
+                    "seq_dha_max_whole":str(record[
+                        mutation_pos_index + len(ref)
+                        : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
+                        ]),
+                    "seq_altered" : alt,
+                    "ref": ref,
+                    "strand":"plus" if strand == "+" else "minus",
+                    "mutation_pos_index":mutation_pos_index,
+                    "geneid":chrom,
+                    "name":name,
+                    "seq_dr":alt[-dr_seq_length:],
+                    "uha_upstream":str(record[
+                        mutation_pos_index 
+                        - max_left_arm_seq_length - max_verify_2_up_ponit -100
+                        : mutation_pos_index 
+                        - max_left_arm_seq_length - max_verify_2_up_ponit
+                        ]),
+                    "dha_downstream":str(
+                        record[
+                            mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
+                            : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit + 100
+                        ]),
+                    "level":">90", # 增加一对引物
+                    "type":mutation_type,
+                }
+                return info_dict
+        else:
+            error_message = "The target mutation ref of " + mun_id + " can not be found in reference, please check."
+            return error_message
+    else:
+        error_message = "The target manipulation type of " + mun_id + " must be equal to 'insertion,substitution or deletion', Please rightly prepare input file for target manipulation as the example of 2,3-BD."
+        # print(error_message)
+        return  error_message
+
 def input_to_primer_template(input_file_path,genome,config,workdir):
     """
     Arguments:
@@ -130,208 +316,119 @@ def input_to_primer_template(input_file_path,genome,config,workdir):
             }
         }
     """
-    max_left_arm_seq_length=int(config['max_left_arm_seq_length'])
-    max_right_arm_seq_length=int(config['max_right_arm_seq_length'])
-    max_verify_2_up_ponit=int(config['max_verify_2_up_ponit'])
-    max_verify_2_down_ponit=int(config['max_verify_2_down_ponit'])
-    dr_seq_length=int(config['dr_seq_length'])
-    length_threshold_msddsc=int(config['length_threshold_msddsc'])
     input_format=input_file_path.split('.')[-1]
-    primer_template = {}
-    if input_format != 'csv':
-        error_message = "The input file format needs to be 'csv'"
-        print(error_message)
-        return error_message
-    else:
-        # read genome
-        # record = SeqIO.read(genome, "fasta").seq
-        # record_list = list(SeqIO.parse(genome, "fasta"))
-        record_dict = SeqIO.to_dict(SeqIO.parse(genome, "fasta"))
-        blast_search_dict = blast_search(input_file_path,genome,workdir)
-        df=pd.read_csv(input_file_path)
-        num_lines_df=df.shape[0]
-        for i in range(num_lines_df):
-            data=df.loc[i].values
-            #print(data)
-            mun_id=str(data[0])
-            if len(data) < 5:
-                error_message = "Some necessary input information is missing in the line "+mun_id+" of the input file"
-                print(error_message)
-                return  error_message
-            else:
-                upstream = data[1].strip().upper()
-                ref = data[2]
-                alt = data[3]
-                mutation_type = data[4].strip().lower()
-                
-                if mun_id not in blast_search_dict:
-                    # 没有blast上
-                    error_message = "The upstream sequence of " + mun_id + " can not be mapped to the target genome. please check whether the target sequence is located on the target genome. Please rightly prepare input file for target manipulation as the example of 2,3-BD."
-                    print(error_message)
-                    return error_message
-                elif blast_search_dict[mun_id]["unique_mapped"] > 1:
-                    # 多次比对上 100
-                    error_message = "The upstream sequence of " + mun_id + "  can be mapped to multiple loci in the target genome, %s, Please provide a longer upstream seqeunce." % blast_search_dict[mun_id]["description"]
-                    print(error_message)
-                    return error_message
-                elif blast_search_dict[mun_id]["unique_mapped"] == 0:
-                    # 无 100 比对
-                    error_message = "The upstream sequence of " + mun_id + " can not be uniquely mapped to the target genome. Please check whether the target sequence is located on the target genome."
-                    print(error_message)
-                    return error_message
-                elif blast_search_dict[mun_id]["unique_mapped"] == 1:
-                    # 开始突变的碱基在genome上的索引
-                    if blast_search_dict[mun_id]["reverse_mapped"]:
-                        record = revComp(str(record_dict[blast_search_dict[mun_id]["chrom"]].seq))
-                        upstream_start_index = len(record) - int(blast_search_dict[mun_id]["start"])
-                        # record=str(record_dict[blast_search_dict[mun_id]["chrom"]].seq).translate(str.maketrans('ACGTacgtRYMKrymkVBHDvbhd', 'TGCAtgcaYRKMyrkmBVDHbvdh'))
-                        # mutation_pos_index = int(blast_search_dict[mun_id]["start"])
-                        strand = "minus"
-                    else:
-                        record = str(record_dict[blast_search_dict[mun_id]["chrom"]].seq)
-                        upstream_start_index = int(blast_search_dict[mun_id]["start"])-1
-                        strand = "plus"
-                    mutation_pos_index = upstream_start_index + len(upstream)
-                    mutation_pos_ref = record[mutation_pos_index].upper()
-                    # length 
-                    if mutation_pos_index - max_left_arm_seq_length < 0:
-                        error_message = "The length of upstream sequence of manipulation site of " + mun_id + " must be larger than sum of 'Max Length of UHA' and 'Max Length of UIS'."
-                        print(error_message)
-                        return error_message
-                    if mutation_type == "deletion":
-                        # 先判断用户提供的ref是否与参考基因组ref一致
-                        genome_ref = record[mutation_pos_index:mutation_pos_index+len(ref)]
-                        if genome_ref.upper() == ref.upper():
-                            primer_template[mun_id] = {
-                                    "seq_uha_max_whole":str(record[
-                                        mutation_pos_index - max_left_arm_seq_length - max_verify_2_up_ponit :mutation_pos_index
-                                        ]),
-                                    "seq_dha_max_whole":str(record[
-                                        mutation_pos_index + len(ref)
-                                        : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
-                                        ]),
-                                    "seq_dr":str(record[
-                                        mutation_pos_index - max_left_arm_seq_length:mutation_pos_index
-                                        ])[-dr_seq_length:],
-                                    "seq_altered": "",
-                                    "ref": ref,
-                                    "strand":strand,
-                                    "mutation_pos_index":mutation_pos_index,
-                                    "geneid":blast_search_dict[mun_id]["chrom"],
-                                    "uha_upstream":str(record[
-                                        mutation_pos_index 
-                                        - max_left_arm_seq_length - max_verify_2_up_ponit -100
-                                        : mutation_pos_index 
-                                        - max_left_arm_seq_length - max_verify_2_up_ponit
-                                        ]),
-                                    "dha_downstream":str(
-                                        record[
-                                            mutation_pos_index + max_right_arm_seq_length + max_verify_2_down_ponit
-                                            : mutation_pos_index + max_right_arm_seq_length + max_verify_2_down_ponit + 100
-                                        ]),
-                                    "level":"del",
-                                    "type":mutation_type,
-                                }
-                    elif mutation_type in ["insertion","substitution"]:
-                        if mutation_type == "insertion":
-                            ref = ""
-                        genome_ref = record[mutation_pos_index:mutation_pos_index+len(ref)]
-                        if genome_ref.upper() == ref.upper():
-                            if len(alt)<=dr_seq_length:
-                                primer_template[mun_id] = {
-                                    "seq_uha_max_whole":str(record[
-                                        mutation_pos_index - max_left_arm_seq_length - max_verify_2_up_ponit:mutation_pos_index
-                                        ]),
-                                    "seq_dha_max_whole":str(record[
-                                        mutation_pos_index + len(ref)
-                                        : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
-                                        ]),
-                                    "seq_altered":alt,
-                                    "ref": ref,
-                                    "strand":strand,
-                                    "mutation_pos_index":mutation_pos_index,
-                                    "geneid":blast_search_dict[mun_id]["chrom"],
-                                    "seq_dr":str(record[
-                                        mutation_pos_index - max_left_arm_seq_length:mutation_pos_index
-                                        ]+alt)[-dr_seq_length:],
-                                    "uha_upstream":str(record[
-                                        mutation_pos_index 
-                                        - max_left_arm_seq_length - max_verify_2_up_ponit -100
-                                        : mutation_pos_index 
-                                        - max_left_arm_seq_length - max_verify_2_up_ponit
 
-                                        ]),
-                                    "dha_downstream":str(
-                                        record[
-                                            mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
-                                            : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit + 100
-                                        ]),
-                                    "level":"<30",
-                                    "type":mutation_type,
-                                }
-                            elif dr_seq_length<len(alt)<=length_threshold_msddsc:
-                                primer_template[mun_id] = {
-                                    "seq_uha_max_whole":str(record[
-                                        mutation_pos_index - max_left_arm_seq_length - max_verify_2_up_ponit :mutation_pos_index
-                                        ]),
-                                    "seq_dha_max_whole":str(record[
-                                        mutation_pos_index + len(ref)
-                                        : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
-                                        ]),
-                                    "seq_altered" : alt,
-                                    "ref": ref,
-                                    "strand":strand,
-                                    "mutation_pos_index":mutation_pos_index,
-                                    "geneid":blast_search_dict[mun_id]["chrom"],
-                                    "seq_dr_uha":alt[:math.ceil((len(alt)+dr_seq_length)/2)],
-                                    "seq_dr_dha":alt[math.ceil((len(alt)-dr_seq_length)/2):],
-                                    "uha_upstream":str(record[
-                                        mutation_pos_index 
-                                        - max_left_arm_seq_length - max_verify_2_up_ponit -100
-                                        : mutation_pos_index 
-                                        - max_left_arm_seq_length - max_verify_2_up_ponit
-                                        ]),
-                                    "dha_downstream":str(
-                                        record[
-                                            mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
-                                            : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit + 100
-                                        ]),
-                                    "level":">30&<90",
-                                    "type":mutation_type,
-                                }
-                            else:
-                                primer_template[mun_id] = {
-                                    "seq_uha_max_whole":str(record[
-                                        mutation_pos_index - max_left_arm_seq_length - max_verify_2_up_ponit :mutation_pos_index
-                                        ]),
-                                    "seq_dha_max_whole":str(record[
-                                        mutation_pos_index + len(ref)
-                                        : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
-                                        ]),
-                                    "seq_altered" : alt,
-                                    "ref": ref,
-                                    "strand":strand,
-                                    "mutation_pos_index":mutation_pos_index,
-                                    "geneid":blast_search_dict[mun_id]["chrom"],
-                                    "seq_dr":alt[-dr_seq_length:],
-                                    "uha_upstream":str(record[
-                                        mutation_pos_index 
-                                        - max_left_arm_seq_length - max_verify_2_up_ponit -100
-                                        : mutation_pos_index 
-                                        - max_left_arm_seq_length - max_verify_2_up_ponit
-                                        ]),
-                                    "dha_downstream":str(
-                                        record[
-                                            mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit
-                                            : mutation_pos_index + len(ref) + max_right_arm_seq_length + max_verify_2_down_ponit + 100
-                                        ]),
-                                    "level":">90", # 增加一对引物
-                                    "type":mutation_type,
-                                }
+    with open(input_file_path,'r') as f:
+        input_header = f.readlines()[0]
+        # print(input_header)
+
+    primer_template = {}
+
+    # blast error file
+    with open(os.path.join(workdir,'error.txt'),'w') as blast_error_handler:
+        blast_error_handler.write('ID\tERROR\n')
+
+        if input_format != 'csv':
+            error_message = "The input file format needs to be 'csv'"
+            print(error_message)
+            return error_message
+        elif 'Sequence upstream' in input_header:
+            record_dict = SeqIO.to_dict(SeqIO.parse(genome, "fasta"))
+            blast_search_dict = blast_search(input_file_path,genome,workdir)
+            df=pd.read_csv(input_file_path)
+            num_lines_df=df.shape[0]
+            for i in range(num_lines_df):
+                data=df.loc[i].values
+                #print(data)
+                mun_id=str(data[0])
+                if len(data) < 5:
+                    error_message = "Some necessary input information is missing in the line "+mun_id+" of the input file"
+                    print(error_message)
+                    return  error_message
+                else:
+                    upstream = data[1].strip().upper()
+                    ref = data[2]
+                    alt = data[3]
+                    mutation_type = data[4].strip().lower()
+                    name = mun_id
+
+                    if mun_id not in blast_search_dict:
+                        # 没有blast上
+                        error_message = "The upstream sequence of " + mun_id + " can not be mapped to the target genome. please check whether the target sequence is located on the target genome."
+                        blast_error_handler.write(f'{mun_id}\t{error_message}\n')
+                    elif blast_search_dict[mun_id]["unique_mapped"] > 1:
+                        # 多次比对上 100
+                        error_message = "The upstream sequence of " + mun_id + "  can be mapped to multiple loci in the target genome, %s, Please provide a longer upstream seqeunce." % blast_search_dict[mun_id]["description"]
+                        blast_error_handler.write(f'{mun_id}\t{error_message}\n')
+                    elif blast_search_dict[mun_id]["unique_mapped"] == 0:
+                        # 无 100 比对
+                        error_message = "The upstream sequence of " + mun_id + " can not be uniquely mapped to the target genome. Please check whether the target sequence is located on the target genome."
+                        blast_error_handler.write(f'{mun_id}\t{error_message}\n')
+                    elif blast_search_dict[mun_id]["unique_mapped"] == 1:
+                        # 开始突变的碱基在genome上的索引
+                        if blast_search_dict[mun_id]["reverse_mapped"]:
+                            record = revComp(str(record_dict[blast_search_dict[mun_id]["chrom"]].seq))
+                            upstream_start_index = len(record) - int(blast_search_dict[mun_id]["start"])
+                            strand = "-"
+                        else:
+                            record = str(record_dict[blast_search_dict[mun_id]["chrom"]].seq)
+                            upstream_start_index = int(blast_search_dict[mun_id]["start"])-1
+                            strand = "+"
+                        chrom = blast_search_dict[mun_id]["chrom"]
+                        mutation_pos_index = upstream_start_index + len(upstream)
+                        
+                        # get mutation info dict
+                        res = create_mutation_info(
+                            record,mutation_type,mutation_pos_index,
+                            ref,alt,strand,chrom,
+                            name,mun_id,config
+                            )
+                        if isinstance(res,str):
+                            blast_error_handler.write(f'{mun_id}\t{res}\n')
+                        else:
+                            primer_template[mun_id] = res
+        elif 'Chr,Pos,Strand' in input_header:
+            # input type 2: vcf
+            print('processing vcf input file ...')
+            record_dict = SeqIO.to_dict(SeqIO.parse(genome, "fasta"))
+            df=pd.read_csv(input_file_path)
+            num_lines_df=df.shape[0]
+            for i in range(num_lines_df):
+                data=df.loc[i].values
+                #print(data)
+                mun_id=str(data[0])
+                if len(data) < 7:
+                    error_message = "Some necessary input information is missing in the line "+mun_id+" of the input file"
+                    print(error_message)
+                    return  error_message
+                else:
+                    chrom = data[1].strip()
+                    pos = data[2]
+                    strand = data[3]
+                    ref = data[4].strip()
+                    alt = data[5]
+                    mutation_type = data[6]
+                    name = mun_id
+
+                    if strand == '+':
+                        record = str(record_dict[chrom].seq)
+                        mutation_pos_index = int(pos) - 1
+                    elif strand == '-':
+                        record = revComp(str(record_dict[chrom].seq))
+                        mutation_pos_index = len(record) - int(pos)
+                    # get mutation info dict
+                    res = create_mutation_info(
+                        record,mutation_type,mutation_pos_index,
+                        ref,alt,strand,chrom,
+                        name,mun_id,config
+                        )
+                    if isinstance(res,str):
+                        blast_error_handler.write(f'{mun_id}\t{res}\n')
                     else:
-                        error_message = "The target manipulation type of " + mun_id + " must be equal to 'insertion,substitution or deletion', Please rightly prepare input file for target manipulation as the example of 2,3-BD."
-                        print(error_message)
-                        return  error_message
+                        primer_template[mun_id] = res
+        else:
+            error_message = "The input file format not supported, Please rightly prepare input file for target manipulation as the example of 2,3-BD."
+            return  error_message  
     return primer_template
 
 #Obtain linear plasmid sequence
@@ -599,7 +696,7 @@ def genOutputFile(dict_primers_whole,workdir):
                 pd.read_json(json.dumps(dict_primers_whole[kind][sub_kind])).to_excel(writer_failed, "Failed_task_for_"+sub_kind)
             writer_failed.save()
 
-def generate_visualize_file(key1,dict_input_seq,plasmidseq,screeningmarker_seq,config,dict_left_primer,dict_right_primer,dict_uha,dict_dha,dict_screeningmarker,dict_verify1,dict_verify2,fsave,workdir,dict_insert={}):
+def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_left_primer,dict_right_primer,dict_uha,dict_dha,dict_screeningmarker,dict_verify2,fsave,workdir,dict_insert={}):
     """
     Arguments:
         key1[str]: seq id
@@ -613,8 +710,8 @@ def generate_visualize_file(key1,dict_input_seq,plasmidseq,screeningmarker_seq,c
                         "strand":,
                         "mutation_pos_index":,
                         "geneid":,
+                        "name":,
                     }
-        plasmidseq[str]: plasmid sequence
         screeningmarker_seq[str]: screeningmarker_seq sequence
         config[dict]: points information
         dict_left_primer[dict]:
@@ -622,7 +719,6 @@ def generate_visualize_file(key1,dict_input_seq,plasmidseq,screeningmarker_seq,c
         dict_uha[dict]: uha design information
         dict_dha[dict]: dha design information
         dict_screeningmarker[dict]: screeningmarker information
-        dict_verify1[dict]: verify1 design information
         dict_verify2[dict]: verify2 design information
         fsave[handler]: file handler
         workdir[str]: output dir
@@ -645,6 +741,7 @@ def generate_visualize_file(key1,dict_input_seq,plasmidseq,screeningmarker_seq,c
     strand = dict_input_seq["strand"]
     geneid = dict_input_seq["geneid"]
     mutation_pos_index = dict_input_seq["mutation_pos_index"]
+    name = dict_input_seq["name"]
 
     dr_seq_length=int(config['dr_seq_length'])
     # visualize json
@@ -705,17 +802,13 @@ def generate_visualize_file(key1,dict_input_seq,plasmidseq,screeningmarker_seq,c
         intergrated_seq = uha + dict_input_seq["seq_dr_uha"]+ screeningmarker_seq + dict_input_seq["seq_dr_dha"] + dha
     elif dict_input_seq["level"] == ">90":
         intergrated_seq = uha + dict_input_seq["seq_altered"] + screeningmarker_seq + dict_input_seq["seq_dr"] + dha
-    # 如果有质粒，两端添加质粒
-    if plasmidseq:
-        plasmid_intergrated_seq = plasmidseq[20:] + intergrated_seq + plasmidseq[:20]
-    else:
-        # 没有线性序列
-        plasmid_intergrated_seq = intergrated_seq
+    
+    plasmid_intergrated_seq = intergrated_seq
     
     ## 2.1 uha
     tmp ={}
-    tmp["name"] = "plasmid" if plasmidseq else "Fragment for 1st crossover"
-    tmp["detail"] = "Constructed recombinant plasmid. The upstream homologous arm (UHA), the downstream homologous arm (DHA), screening marker and primer-1/2, primer-3/4, primer-5/6 (for long fragment insertion or substitution) primer-7/8 are visualized." if plasmidseq else "Assembled PCR product. The upstream homologous arm (UHA), the downstream homologous arm (DHA), screening marker and primer-1/2, primer-3/4, primer-5/6 (for long fragment insertion or substitution) primer-7/8 are visualized."
+    tmp["name"] =  "Fragment for 1st crossover"
+    tmp["detail"] = "Assembled PCR product. The upstream homologous arm (UHA), the downstream homologous arm (DHA), screening marker and primer-1/2, primer-3/4, primer-5/6 (for long fragment insertion or substitution) primer-7/8 are visualized."
     tmp["seq"] = plasmid_intergrated_seq
     tmp["params"] = [
         {
@@ -887,109 +980,7 @@ def generate_visualize_file(key1,dict_input_seq,plasmidseq,screeningmarker_seq,c
         }
     )
     visualize_list.append(tmp)
-    '''
-    # 3. verify1 visualize
-    # 有质粒，才有v1
-    if plasmidseq:
-        v1_seq = dict_input_seq["uha_upstream"]+ targetseq[:seq_uha_left_point] + intergrated_seq + plasmidseq[
-            :int(config["max_verify_1_down_ponit"]) + v_offset
-        ]
-        
-        ## 3.1 uha
-        tmp = {}
-        tmp["name"]="Verify1"
-        tmp["detail"]="Verification of the 1st-round of crossover and isolation. The upstream homologous arm (UHA), the downstream homologous arm (DHA) screening marker and test-primer-1/2 are visualized."
-        tmp["seq"] = v1_seq
-        tmp["params"] = [
-            {
-                "name":"uha",
-                "start":str(v1_seq.find(uha)),
-                "end":str(v1_seq.find(uha) + len(uha)),
-                'direction':1,
-                'color':'red',
-            }
-        ]
-        
-        ## 3.2 dha
-        tmp["params"].append(
-            {
-                "name":"dha",
-                "start":str(v1_seq.find(dha)),
-                "end":str(v1_seq.find(dha) + len(dha)),
-                'direction':1,
-                'color':'red',
-            }
-        )
-
-        # screeningmarker
-        tmp["params"].append(
-            {
-                "name":"screeningmarker",
-                "start":str(v1_seq.find(screeningmarker_seq)),
-                "end":str(v1_seq.find(screeningmarker_seq) + len(screeningmarker_seq)),
-                'direction':1,
-                'color':'pink',
-            }
-        )
-        # dr seq
-        # 1. front dr
-        tmp["params"].append(
-            {
-                "name":"seq_dr",
-                "start":str(v1_seq.find(screeningmarker_seq)-dr_seq_length),
-                "end":str(v1_seq.find(screeningmarker_seq)),
-                'direction':1,
-                'color':'brown',
-            }
-        )
-        # 2. backend dr
-        tmp["params"].append(
-            {
-                "name":"seq_dr",
-                "start":str(v1_seq.find(screeningmarker_seq) + len(screeningmarker_seq)),
-                "end":str(v1_seq.find(screeningmarker_seq) + len(screeningmarker_seq) + dr_seq_length),
-                'direction':1,
-                'color':'brown',
-            }
-        )
-        ## Inserted fragment
-        if mutation_type in ['substitution','insertion']:
-            tmp["params"].append(
-            {
-                "name":"Inserted fragment",
-                "start":str(v1_seq.find(uha) + len(uha)),
-                "end":str(v1_seq.find(screeningmarker_seq)),
-                'direction':1,
-                'color':'green',
-            }
-        )
-        ## 3.3 v1 primer1
-        v1_primer1 = dict_verify1['PRIMER_LEFT_0_SEQUENCE']
-        tmp["params"].append(
-            {
-                "name":"test-primer-1",
-                "start":str(v1_seq.find(v1_primer1)),
-                "end":str(v1_seq.find(v1_primer1) + len(v1_primer1)),
-                'direction':1,
-                'color':'orange',
-            }
-        )
-        
-        
-        ## 3.4 v1 primer2
-        v1_primer2 = dict_verify1['PRIMER_RIGHT_0_SEQUENCE']
-        v1_primer2_rev =revComp(v1_primer2)
-        tmp["params"].append(
-            {
-                "name":"test-primer-2",
-                "start":str(v1_seq.find(v1_primer2_rev)),
-                "end":str(v1_seq.find(v1_primer2_rev) + len(v1_primer2_rev)),
-                'direction':-1,
-                'color':'orange',
-            }
-        )
-        visualize_list.append(tmp)
-    '''
+    
     # 4. verify2 visualize
     # v2_seq = dict_input_seq["uha_upstream"]+ targetseq[:seq_uha_left_point] + uha + alt + dha + targetseq[seq_dha_right_point + 1 :]  + dict_input_seq["dha_downstream"]
     v2_seq = dict_input_seq["uha_upstream"]+ targetseq + dict_input_seq["dha_downstream"]
@@ -1078,13 +1069,12 @@ def generate_visualize_file(key1,dict_input_seq,plasmidseq,screeningmarker_seq,c
         primer6,
         primer7,
         primer8,
-        dict_verify1['PRIMER_LEFT_0_SEQUENCE'] if plasmidseq else "",
-        dict_verify1['PRIMER_RIGHT_0_SEQUENCE'] if plasmidseq else "",
         dict_verify2['PRIMER_LEFT_0_SEQUENCE'],
         dict_verify2['PRIMER_RIGHT_0_SEQUENCE'],
         strand,
         geneid,
         str(mutation_pos_index),
+        name,
     ]
     fsave.write(
         '\t'.join(linelist) + "\n"
@@ -1109,7 +1099,7 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
     primer_order_fsave =  open(primer_order_file_path,'w')
     visualize_fsave =  open(visualize_file_path,'w')
     # write visualize file header
-    headers = ['seqid','ref','alt',"manipulation","primer-1","primer-2","primer-3","primer-4","primer-5","primer-6","primer-7","primer-8","test-primer-1","test-primer-2","test-primer-3","test-primer-4","strand","geneid","mutation_pos_index",]
+    headers = ['seqid','ref','alt',"manipulation","primer-1","primer-2","primer-3","primer-4","primer-5","primer-6","primer-7","primer-8","test-primer-3","test-primer-4","strand","geneid","mutation_pos_index","name",]
     visualize_fsave.write(
         '\t'.join(headers) + "\n"
     )
@@ -1191,11 +1181,9 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
                         #primers_submitted_output(leftPrimerAttribute(key1,dictleftprimers,target_seq,dict_input_seq[key1],screeningmarker_seq,config)[0],rightPrimerAttribute(key1,dictrightprimers,target_seq,dict_input_seq[key1],screeningmarker_seq,seq_uha_left_point,config)[0],verify2PrimerAttribute(key1,dictverify2primers,seq_verify2_temp),primer_order_fsave)
                             primers_submitted_output(dict_left_primers_attribute,dict_right_primers_attribute,dict_screening_marker_primers_attribute,dict_verify2_primers_attribute,primer_order_fsave)
                     # visualize
-                    '''
                     generate_visualize_file(
                         key1,
                         dict_input_seq[key1],
-                        plasmidseq,
                         screeningmarker_seq,
                         config,
                         dictleftprimers,
@@ -1203,13 +1191,11 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
                         dict_left_primers_attribute,
                         dict_right_primers_attribute,
                         dict_screening_marker_primers_attribute,
-                        dict_verify1_primers_attribute,
                         dict_verify2_primers_attribute,
                         visualize_fsave,
                         workdir,
                         dict_inserted_primers_attribute
                         )
-                    '''
     #print(dict_primers_whole['successful']['dha'])
     # 保存文件
     blast_input_file.close()
