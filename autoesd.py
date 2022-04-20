@@ -46,7 +46,7 @@ def main():
     if technology == "PSS":
         cmd = "python ./PSS/plasmid_single_single.py -i %s  -p %s -r %s  -c %s -d %s" % (inputfile,plasmidfile,ref,config,outputdir)
     elif technology == "PDS":
-        cmd = "python ./PDS/plasmid_double_single.py -i %s -s %s -r %s -p % -c %s -d %s" % (inputfile,screeningmarker,ref,plasmidfile,config,outputdir)
+        cmd = "python ./PDS/plasmid_double_single.py -i %s -s %s -r %s -p %s -c %s -d %s" % (inputfile,screeningmarker,ref,plasmidfile,config,outputdir)
         if user_specific_test_primer:
             cmd += " -u " + user_specific_test_primer
         if screening_maker_removal:

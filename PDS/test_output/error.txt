@@ -1,1 +1,2 @@
 ID	ERROR
+BSU_00010	The length of upstream sequence of manipulation site of BSU_00010 must be larger than sum of 'Max Length of UHA' and 'Max Length of UIS'.

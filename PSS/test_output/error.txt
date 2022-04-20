@@ -1,1 +1,2 @@
 ID	ERROR
+CGL_RS00005	The length of upstream sequence of manipulation site of CGL_RS00005 must be larger than sum of 'Max Length of UHA' and 'Max Length of UIS'.

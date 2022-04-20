@@ -41,7 +41,9 @@ The input files include the "Target genome" ("Cg_13032.fna"), the "Linear plasmi
 
 Calculation for the example design tasks can be performed by running "cmd.sh" or run the following command in the root path:
 ```shell
-python autoesd.py -t PSS -i ./PSS/test_input/PSS_cgl_input_example.csv  -p ./PSS/test_input/PSS_cgl_linear_plasmid.txt -r ./PSS/test_input/Cg_13032.fna  -c test_input/config.txt -d ./PSS/test_output
+python autoesd.py -t PSS -i ./PSS/test_input/PSS_cgl_input_example.csv  -p ./PSS/test_input/PSS_cgl_linear_plasmid.txt -r ./PSS/test_input/Cg_13032.fna  -c ./PSS/test_input/config.txt -d ./PSS/test_output
+#or
+python autoesd.py -t PSS -i ./PSS/test_input/PSS_cgl_input_example_vcf.csv  -p ./PSS/test_input/PSS_cgl_linear_plasmid.txt -r ./PSS/test_input/cgl_13032_vcf.fna  -c ./PSS/test_input/config.txt -d ./PSS/test_output
 ```
 
 ### FDS
@@ -55,7 +57,10 @@ The input files include the "Target genome" ("Ec_MG1655.fna"), the "Screening ma
 
 Calculation for the example design tasks can be performed by running "cmd.sh" or run the following command in the root path:
 ```shell
+#use the "Target manipulations" file containing the sequences used to locate the sites of manipulation
 python autoesd.py -t FDS -i ./FDS/test_input/FDS_eco_input_example.csv  -s ./FDS/test_input/FDS_eco_screening_marker.txt -r ./FDS/test_input/Ec_MG1655.fna  -c ./FDS/test_input/config.txt -d ./FDS/test_output -m "No"
+#or the "Target manipulations" file containing the chromosomal positions used to locate the sites of manipulation
+python autoesd.py -t FDS -i ./FDS/test_input/FDS_eco_input_example_vcf.csv  -s ./FDS/test_input/FDS_eco_screening_marker.txt -r ./FDS/test_input/Ec_MG1655.fna  -c ./FDS/test_input/config.txt -d ./FDS/test_output -m "No"
 ```
 
 ### PDS
@@ -70,6 +75,8 @@ The input files include the "Target genome" ("bsu_168_upp_del.fna"), the "Linear
 Calculation for the example design tasks can be performed by running "cmd.sh" or run the following command in the root path:
 ```shell
 python autoesd.py -t PDS -i ./PDS/test_input/PDS_bsu_input_example.csv -s ./PDS/test_input/PDS_bsu_screening_marker.txt -r ./PDS/test_input/bsu_168_upp_del.fna -p ./PDS/test_input/PDS_bsu_linear_plasmid.txt -c ./PDS/test_input/config.txt -d ./PDS/test_output -u "AGCTACACGCTGTCTTGCTTC" -m "No"
+
+python autoesd.py -t PDS -i ./PDS/test_input/PDS_bsu_input_example_vcf.csv -s ./PDS/test_input/PDS_bsu_screening_marker.txt -r ./PDS/test_input/bsu_168.fna -p ./PDS/test_input/PDS_bsu_linear_plasmid.txt -c ./PDS/test_input/config.txt -d ./PDS/test_output -u "AGCTACACGCTGTCTTGCTTC" -m "No"
 ```
 
 ### FDD
@@ -84,6 +91,8 @@ The input files include the "Target genome" ("Ec_MG1655.fna"), the "Screening ma
 Calculation for the example design tasks can be performed by running "cmd.sh" or run the following command in the root path:
 ```shell
 python autoesd.py -t FDD -i ./FDD/test_input/FDD_eco_input_example.csv  -s ./FDD/test_input/FDD_eco_screening_marker.txt -r ./FDD/test_input/Ec_MG1655.fna  -c ./FDD/test_input/config.txt -d ./FDD/test_output  -u "CCGGAAACTCCGCTGGGCGA" -m "No"
+
+python autoesd.py -t FDD -i ./FDD/test_input/FDD_eco_input_example_vcf.csv  -s ./FDD/test_input/FDD_eco_screening_marker.txt -r ./FDD/test_input/Ec_MG1655.fna  -c ./FDD/test_input/config.txt -d ./FDD/test_output  -u "CCGGAAACTCCGCTGGGCGA" -m "No"
 ```
 
 ### ODD
@@ -98,6 +107,8 @@ The input files include the "Target genome" ("Ec_MG1655.fna"), the "Screening ma
 Calculation for the example design tasks can be performed by running "cmd.sh" or run the following command in the root path:
 ```shell
 python autoesd.py -t ODD -i ./ODD/test_input/ODD_eco_input_example.csv  -s ./ODD/test_input/ODD_eco_screening_marker.txt -r ./ODD/test_input/Ec_MG1655.fna  -c ./ODD/test_input/config.txt -d ./ODD/test_output -u "TGGGCGAGCCGAAAAACAAATA" -m "No"
+
+python autoesd.py -t ODD -i ./ODD/test_input/ODD_eco_input_example_vcf.csv  -s ./ODD/test_input/ODD_eco_screening_marker.txt -r ./ODD/test_input/Ec_MG1655.fna  -c ./ODD/test_input/config.txt -d ./ODD/test_output -u "TGGGCGAGCCGAAAAACAAATA" -m "No"
 ```
 
 The output files include the detailed information of the designed primers ("Design_results.xlsx"), the tasks without accessible primers and their failure reasons ("Failed_task.xlsx"), the list of primers provided to the primer synthesis company ("Primer_order.xlsx"), and the target sequences that can be mapped to multiple loci in the target genome and may lead to potential off-target events ("Evaluation_result.xlsx").
