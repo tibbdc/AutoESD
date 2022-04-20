@@ -1,0 +1,156 @@
+[
+    {
+        "name": "target manipulation site",
+        "detail": "The position of target manipulation site (the sequence before the manipulation) on the reference genome is visualized.",
+        "params": [
+            {
+                "name": "target_seq_mutation_site",
+                "start": "1180",
+                "end": "2182",
+                "mutation_type": "deletion",
+                "alt": ""
+            }
+        ],
+        "seq": "ccggtcatccggaaatcatgacagcggacgagctgcgccgtcaatttcacgaaaaaggcttttctgatatcgaagagctagtcatgcttggcggaaaaaaatatcgaagcgttctaaacgccgtcatcggagaacaccagcatatcagctggccgctatcatcatacaaaggcataggctatatgctccaagcgctgaaccgggctgttgaagaaaagcatgaactgtagcacgtacatatgaggaaaagagtgggaacatgaaaaaacttgtgtttggcttgcttgccattgtgttattcggatgcggactatatatctatcatgtatggttcggtgatccattttcgaaaaatgctgcagaacagaagctagtgtcttatgtgaaacaaacctatcctaagaaagaaatcaagatcacgaatggggtatataacgctaaaacgtctgaatatgtatttgaagcaacctcccaatctcatcgctacccaatgtgtacgaagggatttctgcatcctaaagtaacgtgcgatggaattgaagaagcgtataccgaatcagtagcaaaacatgtaaatgaagaagcaacgaaggcaatcgaagcagatctgaaaaaagcggttcctcgatttataaaagctgatgctgctttgagtatcgaaaacggacagttcacgttagatacaaaatggaacaaaaagctggctgaaaaagcgcctatgagcatgacgattcagttagacgccagcgggttatcaaaaacagatgccgcaaagatggcggaaacggtcagaaaaacgcttaatgaaaagggatatacatactcaaacggcacgatagactgtatgcagaaggacggggacggcggtattggatatgtcaaatattcaattgattttctttcaaaagcagctattcagtcaaacgatgcagaggaactaggaagttaaaaagatttccaaggaaataaatacgtcgatcattgtcaaaggccgggtgatatccggtcttttttttgcatgctgtaaaacgagacaaatgaatcagtttgagacaaaacgagacacacgtctcaaactgtctccaaagtgaagatgagaagactgattttacgggctcaaaagactggcacacttcttgcatttataatggtgaaccctaaatagaaggaggcgcacaaaatgaaattgttaaaacgagaaggcttgtcattaactgaggaaaaagcgctgtggatgtaccaaaagatgctggagatcaggggctttgaagacaaagtgcatgaactgttcgcccagggagtgcttcccggattcgttcatttatatgccggtgaggaagccgtggctgtaggggtgtgcgctcatttacatgatggcgacagcattacaagcacccacaggggacatggacattgtatcgccaaaggctgtgacctggacggcatgatggcggaaattttcgggaaagcgaccggattgtgcaaaggcaagggcggttctatgcacattgcggatcttgataaaggcatgttaggcgcaaatggaatcgtcgggggcggctttacgctcgcatgcggatcagcgctcacggctaaatataaacagactaaaaatgtaagcgtttgctttttcggggacggggcaaataaccaaggtaccttccacgaagggctgaatttagcggctgtatggaaccttcctgtcgtatttgttgctgaaaacaacggctatggcgaagctaccccatttgagtacgcatcagcctgtgattcaatcgccgatcgggcggctgcttataacatgccgggggttacagttgacggcaaagatattttagcagtttaccaggcagccgaggaagcgatagaaagagcaagaaacggcggcggcccgtctttgattgaatgtatgacctacagaaactacggccatttcgaaggagatgcccaaacctataaaacgaaggatgaaagagttgagcaccttgaagaaaaagatgccattcaaggttttaaaaactaccttttaaaagaaacagatgctaataagctgtcagacattgaacagcgtgtcagcgaatcgattgaaaaagccgtctcgttcagcgaagacagcccatatccaaaagattcggagctgctgacagatgtgtatgtgtcatatgaaaaaggaggaatgtaagagatggcgagagtcataagcatgtcagacgcgatcaatgaagcaatgaagcttgcgatgagaaaagacgaaaatgtgcttttgatcggtgaggatgtcgccgggggagcggcggtcgatcatttgcaggatgatgaagcatggggcggtgtattaggggtcacaaagggactcgtacaggaattcgggcgtacaagagtgctggacactccgatttctgaggcaggctatatgggagcggctatggctgcggcatcaaccggtttgagaccgattgccgagctgatgtttaacgattttatcggcacgtgctttgatcaggtgatcaaccaaggggcgaaattccgttatatgttcggcggaaaagcgcaagtgccgattaccgtccgcaccacatacggagcagggttccgggccgctgcccagcattcacaatcgctgtatggccttttcacgagcatccctggactgaagacagttgttccatccaatccgtatgatgccaaaggtcttttgcttgcagcaatagaagataatgatccggtgtttttctttgaagacaaaacgtcctacaacatgaagggcgaggtgccggaagattattatacaattcccctcggaaaagcggatatcaaacgcgaaggcaatgatgttacgctctttgcagtcggcaagcaggtcaatactgcgcttgaagcggctgcacagctttcagagaggggcatcgaagccgaggtccttgatccccgcagtctgtctcctctggatgaggatgcgattttcacatcgttagaaaaaacaaaccggctgatcatcattgatgaagccaatccgcgatgcagcattgccacggatattgctgcgcttgtcgctgacaagggctttgatttgcttgatgcgccgattaaacggattacagcgccgcatacaccggttccgttttcaccagtgcttgaagatcaatatttgccgacaccagataaaattgtcagcgtcacgcttgaattgcttggcgagccggcattgaattaaaggggggacacaaatggcggtaaaagtagtgatgccaaaattgggaatggccatgaaacaaggggaagtatcgatatggaataaaaaagtaggcgacccggttgaaaagggagaaagcattgccagcattcaatcggagaaaattgaa"
+    },
+    {
+        "name": "plasmid",
+        "detail": "Constructed recombinant plasmid. The upstream homologous arm (UHA), the downstream homologous arm (DHA), screening marker and primer-1/2, primer-3/4, primer-5/6 (for long fragment insertion or substitution) primer-7/8 are visualized.",
+        "seq": "GGGTACCGAGCTCGAATTCGTAATCATGGTCATAGCTGTTTCCTGTGTGAAATTGTTATCCGCTCACAATTCCACACAACATACGAGCCGGAAGCATAAAGTGTAAAGCCTGGGGTGCCTAATGAGTGAGCTAACTCACATTAATTGCGTTGCGCTCACTGCCCGCTTTCCAGTCGGGAAACCTGTCGTGCCAGCTGCATTAATGAATCGGCCAACGCGCGGGGAGAGGCGGTTTGCGTATTGGGCGCTCTTCCGCTTCCTCGCTCACTGACTCGCTGCGCTCGGTCGTTCGGCTGCGGCGAGCGGTATCAGCTCACTCAAAGGCGGTAATACGGTTATCCACAGAATCAGGGGATAACGCAGGAAAGAACATGTGAGCAAAAGGCCAGCAAAAGGCCAGGAACCGTAAAAAGGCCGCGTTGCTGGCGTTTTTCCATAGGCTCCGCCCCCCTGACGAGCATCACAAAAATCGACGCTCAAGTCAGAGGTGGCGAAACCCGACAGGACTATAAAGATACCAGGCGTTTCCCCCTGGAAGCTCCCTCGTGCGCTCTCCTGTTCCGACCCTGCCGCTTACCGGATACCTGTCCGCCTTTCTCCCTTCGGGAAGCGTGGCGCTTTCTCATAGCTCACGCTGTAGGTATCTCAGTTCGGTGTAGGTCGTTCGCTCCAAGCTGGGCTGTGTGCACGAACCCCCCGTTCAGCCCGACCGCTGCGCCTTATCCGGTAACTATCGTCTTGAGTCCAACCCGGTAAGACACGACTTATCGCCACTGGCAGCAGCCACTGGTAACAGGATTAGCAGAGCGAGGTATGTAGGCGGTGCTACAGAGTTCTTGAAGTGGTGGCCTAACTACGGCTACACTAGAAGGACAGTATTTGGTATCTGCGCTCTGCTGAAGCCAGTTACCTTCGGAAAAAGAGTTGGTAGCTCTTGATCCGGCAAACAAACCACCGCTGGTAGCGGTGGTTTTTTTGTTTGCAAGCAGCAGATTACGCGCAGAAAAAAAGGATCTCAAGAAGATCCTTTGATCTTTTCTACGGGGTCTGACGCTCAGTGGAACGAAAACTCACGTTAAGGGATTTTGGTCATGAGATTATCAAAAAGGATCTTCACCTAGATCCTTTTAAATTAAAAATGAAGTTTTAAATCAATCTAAAGTATATATGAGTAAACTTGGTCTGACAGTTACCAATGCTTAATCAGTGAGGCACCTATCTCAGCGATCTGTCTATTTCGTTCATCCATAGTTGCCTGACTCCCCGTCGTGTAGATAACTACGATACGGGAGGGCTTACCATCTGGCCCCAGTGCTGCAATGATACCGCGAGACCCACGCTCACCGGCTCCAGATTTATCAGCAATAAACCAGCCAGCCGGAAGGGCCGAGCGCAGAAGTGGTCCTGCAACTTTATCCGCCTCCATCCAGTCTATTAATTGTTGCCGGGAAGCTAGAGTAAGTAGTTCGCCAGTTAATAGTTTGCGCAACGTTGTTGCCATTGCTACAGGCATCGTGGTGTCACGCTCGTCGTTTGGTATGGCTTCATTCAGCTCCGGTTCCCAACGATCAAGGCGAGTTACATGATCCCCCATGTTGTGCAAAAAAGCGGTTAGCTCCTTCGGTCCTCCGATCGTTGTCAGAAGTAAGTTGGCCGCAGTGTTATCACTCATGGTTATGGCAGCACTGCATAATTCTCTTACTGTCATGCCATCCGTAAGATGCTTTTCTGTGACTGGTGAGTACTCAACCAAGTCATTCTGAGAATAGTGTATGCGGCGACCGAGTTGCTCTTGCCCGGCGTCAATACGGGATAATACCGCGCCACATAGCAGAACTTTAAAAGTGCTCATCATTGGAAAACGTTCTTCGGGGCGAAAACTCTCAAGGATCTTACCGCTGTTGAGATCCAGTTCGATGTAACCCACTCGTGCACCCAACTGATCTTCAGCATCTTTTACTTTCACCAGCGTTTCTGGGTGAGCAAAAACAGGAAGGCAAAATGCCGCAAAAAAGGGAATAAGGGCGACACGGAAATGTTGAATACTCATACTCTTCCTTTTTCAATATTATTGAAGCATTTATCAGGGTTATTGTCTCATGAGCGGATACATATTTGAATGTATTTAGAAAAATAAACAAATAGGGGTTCCGCGCACATTTCCCCGAAAAGTGCCACCTGACGTCTCACATATGACTAGTccgggctgttgaagaaaagcatgaactgtagcacgtacatatgaggaaaagagtgggaacatgaaaaaacttgtgtttggcttgcttgccattgtgttattcggatgcggactatatatctatcatgtatggttcggtgatccattttcgaaaaatgctgcagaacagaagctagtgtcttatgtgaaacaaacctatcctaagaaagaaatcaagatcacgaatggggtatataacgctaaaacgtctgaatatgtatttgaagcaacctcccaatctcatcgctacccaatgtgtacgaagggatttctgcatcctaaagtaacgtgcgatggaattgaagaagcgtataccgaatcagtagcaaaacatgtaaatgaagaagcaacgaaggcaatcgaagcagatctgaaaaaagcggttcctcgatttataaaagctgatgctgctttgagtatcgaaaacggacagttcacgttagatacaaaatggaacaaaaagctggctgaaaaagcgcctatgagcatgacgattcagttagacgccagcgggttatcaaaaacagatgccgcaaagatggcggaaacggtcagaaaaacgcttaatgaaaagggatatacatactcaaacggcacgatagactgtatgcagaaggacggggacggcggtattggatatgtcaaatattcaattgattttctttcaaaagcagctattcagtcaaacgatgcagaggaactaggaagttaaaaagatttccaaggaaataaatacgtcgatcattgtcaaaggccgggtgatatccggtcttttttttgcatgctgtaaaacgagacaaatgaatcagtttgagacaaaacgagacacacgtctcaaactgtctccaaagtgaagatgagaagactgattttacgggctcaaaagactggcacacttcttgcatttataatggtgaaccctaaatagaaggaggcgcacaaaAGATCTCTTAAGTTCGAACTCGAGCCATGGAAAGGATTTTTCGCTACGCTCAAATCCTTTAAAAAAACACAAAAGACCACATTTTTTAATGTGGTCTTTATTCTTCAACTAAAGCACCCATTAGTTCAACAAACGAAAATTGGATAAAGTGGGATATTTTTAAAATATATATTTATGTTACAGTAATATTGACTTTTAAAAAAGGATTGATTCTAATGAAGAAAGCAGACAAGTAAGCCTCCTAAATTCACTTTAGATAAAAATTTAGGAGGCATATCAAATGAACTTTAATAAAATTGATTTAGACAATTGGAAGAGAAAAGAGATATTTAATCATTATTTGAACCAACAAACGACTTTTAGTATAACCACAGAAATTGATATTAGTGTTTTATACCGAAACATAAAACAAGAAGGATATAAATTTTACCCTGCATTTATTTTCTTAGTGACAAGGGTGATAAACTCAAATACAGCTTTTAGAACTGGTTACAATAGCGACGGAGAGTTAGGTTATTGGGATAAGTTAGAGCCACTTTATACAATTTTTGATGGTGTATCTAAAACATTCTCTGGTATTTGGACTCCTGTAAAGAATGACTTCAAAGAGTTTTATGATTTATACCTTTCTGATGTAGAGAAATATAATGGTTCGGGGAAATTGTTTCCCAAAACACCTATACCTGAAAATGCTTTTTCTCTTTCTATTATTCCATGGACTTCATTTACTGGGTTTAACTTAAATATCAATAATAATAGTAATTACCTTCTACCCATTATTACAGCAGGAAAATTCATTAATAAAGGTAATTCAATATATTTACCGCTATCTTTACAGGTACATCATTCTGTTTGTGATGGTTATCATGCAGGATTGTTTATGAACTCTATTCAGGAATTGTCAGATAGGCCTAATGACTGGCTTTTATAATATGAGATAATGCCGACTGTACTTTTTACAGTCGGTTTTCTAATGTCACTAACCTGCCCCGTTAGTTGAAGAAGGTTTTTATATTACAGCTCCAGATCCATATCCTTCTTGCATTGAAAAACCACGAAGATGAAGGAAAACTTGAAGAAGCAAGACAGCGTGTAGCTGCTCTGACTGATAAATTTCCTTTATATAAAGAATTAGATTATTAAGATCCTAAAACCCGCTTGGGCTTATGCCCGGCGGGTTTTTTGACGATGTTCTTGAAACTCAATGTCTTTTTTTGTAGAATCAATAGAAGTGTGTAATTGTTGATGGGACAATAAAAAAGGAGCTGAAACACAGTATGGGAAAGGTTTATGTATTTGATCATCCTTTAATTCAGCACAAGCTGACATATATACGGAATGAAAATACAGGTACGAAGGATTTTAGAGAGTTAGTAGATGAAGTGGCTACACTCATGGCATTTGAAATTACCCGCGATCTTCCTCTGGAAGAAGTGGATATCAATACACCGGTTCAGGCTGCGAAATCGAAAGTCATCTCAGGGAAAAAACTCGGAGTGGTTCCTATCCTCAGAGCAGGATTGGGAATGGTTGACGGCATTTTAAAGCTGATTCCTGCGGCAAAAGTGGGACATGTCGGCCTTTACCGTGATCCAGAAACCTTAAAACCCGTGGAATACTATGTCAAGCTTCCTTCTGATGTGGAAGAGCGTGAATTCATCGTGGTTGACCCGATGCTCGCTACAGGCGGTTCCGCAGTTGAAGCCATTCACAGCCTTAAAAAACGCGGTGCGAAAAATATCCGTTTCATGTGTCTTGTAGCAGCGCCGGAGGGTGTGGAAGAATTGCAGAAGCATCATTCGGACGTTGATATTTACATTGCGGCGCTAGATGAAAAATTAAATGAAAAAGGATATATTGTTCCAGGTCTCGGAGATGCGGGTGACCGCATGTTTGGAACAAAATAAAAAATGAAATCCCCAAAAGGGGGTTTCATTTTTTTATCCAGTTTTTTGCTATTCGGTGAATCTGTATACAATTATAGGTGAAAATGTGAACATTCTGTGGAGACGTAAAGTTAGGGATAACAGGGTAATGCATGCCTGCAGgtgaaccctaaatagaaggaggcgcacaaagagatggcgagagtcataagcatgtcagacgcgatcaatgaagcaatgaagcttgcgatgagaaaagacgaaaatgtgcttttgatcggtgaggatgtcgccgggggagcggcggtcgatcatttgcaggatgatgaagcatggggcggtgtattaggggtcacaaagggactcgtacaggaattcgggcgtacaagagtgctggacactccgatttctgaggcaggctatatgggagcggctatggctgcggcatcaaccggtttgagaccgattgccgagctgatgtttaacgattttatcggcacgtgctttgatcaggtgatcaaccaaggggcgaaattccgttatatgttcggcggaaaagcgcaagtgccgattaccgtccgcaccacatacggagcagggttccgggccgctgcccagcattcacaatcgctgtatggccttttcacgagcatccctggactgaagacagttgttccatccaatccgtatgatgccaaaggtcttttgcttgcagcaatagaagataatgatccggtgtttttctttgaagacaaaacgtcctacaacatgaagggcgaggtgccggaagattattatacaattcccctcggaaaagcggatatcaaacgcgaaggcaatgatgttacgctctttgcagtcggcaagcaggtcaatactgcgcttgaagcggctgcacagctttcagagaggggcatcgaagccgaggtccttgatccccgcagtctgtctcctctggatgaggatgcgattttcacatcgttagaaaaaacaaaccggctgatcatcattgatgaagccaatccgcgatgcagcattgccacggatattgctgcgcttgtcgctgacaagggctttgatttgcttgatgcgccgattaaacggattacagcgccgcatacaccggttccgttttcaccagtgcttgaagatcaatatttgccgacaccagataaaattgtcagcgtcacgcttgaattgcttggcGTCGACTCTAGAGGATCCCC",
+        "params": [
+            {
+                "name": "uha",
+                "start": "2201",
+                "end": "3182",
+                "direction": 1,
+                "color": "red"
+            },
+            {
+                "name": "dha",
+                "start": "5260",
+                "end": "6274",
+                "direction": 1,
+                "color": "red"
+            },
+            {
+                "name": "screeningmarker",
+                "start": "3182",
+                "end": "5230",
+                "direction": 1,
+                "color": "pink"
+            },
+            {
+                "name": "seq_dr",
+                "start": "3152",
+                "end": "3182",
+                "direction": 1,
+                "color": "brown"
+            },
+            {
+                "name": "seq_dr",
+                "start": "5230",
+                "end": "5260",
+                "direction": 1,
+                "color": "brown"
+            },
+            {
+                "name": "primer-1",
+                "start": "2181",
+                "end": "2221",
+                "direction": 1,
+                "color": "orange"
+            },
+            {
+                "name": "primer-2",
+                "start": "3162",
+                "end": "3202",
+                "direction": -1,
+                "color": "orange"
+            },
+            {
+                "name": "primer-3",
+                "start": "5210",
+                "end": "5282",
+                "direction": 1,
+                "color": "blue"
+            },
+            {
+                "name": "primer-4",
+                "start": "6254",
+                "end": "6294",
+                "direction": -1,
+                "color": "blue"
+            },
+            {
+                "name": "primer-7",
+                "start": "3182",
+                "end": "3207",
+                "direction": 1,
+                "color": "purple"
+            },
+            {
+                "name": "primer-8",
+                "start": "5210",
+                "end": "5230",
+                "direction": -1,
+                "color": "purple"
+            }
+        ]
+    },
+    {
+        "name": "Verify1",
+        "detail": "Verification of the 1st-round of crossover and isolation. The upstream homologous arm (UHA), the downstream homologous arm (DHA) screening marker and test-primer-1/2 are visualized.",
+        "seq": "gcaaaaacatttttcgatgagtgggtgattttgtcggcgaagcacgggttcctccgccctgatgatctcgtttcgggaaattacgatgtcacttttggcaccggtcatccggaaatcatgacagcggacgagctgcgccgtcaatttcacgaaaaaggcttttctgatatcgaagagctagtcatgcttggcggaaaaaaatatcgaagcgttctaaacgccgtcatcggagaacaccagcatatcagctggccgctatcatcatacaaaggcataggctatatgctccaagcgctgaaccgggctgttgaagaaaagcatgaactgtagcacgtacatatgaggaaaagagtgggaacatgaaaaaacttgtgtttggcttgcttgccattgtgttattcggatgcggactatatatctatcatgtatggttcggtgatccattttcgaaaaatgctgcagaacagaagctagtgtcttatgtgaaacaaacctatcctaagaaagaaatcaagatcacgaatggggtatataacgctaaaacgtctgaatatgtatttgaagcaacctcccaatctcatcgctacccaatgtgtacgaagggatttctgcatcctaaagtaacgtgcgatggaattgaagaagcgtataccgaatcagtagcaaaacatgtaaatgaagaagcaacgaaggcaatcgaagcagatctgaaaaaagcggttcctcgatttataaaagctgatgctgctttgagtatcgaaaacggacagttcacgttagatacaaaatggaacaaaaagctggctgaaaaagcgcctatgagcatgacgattcagttagacgccagcgggttatcaaaaacagatgccgcaaagatggcggaaacggtcagaaaaacgcttaatgaaaagggatatacatactcaaacggcacgatagactgtatgcagaaggacggggacggcggtattggatatgtcaaatattcaattgattttctttcaaaagcagctattcagtcaaacgatgcagaggaactaggaagttaaaaagatttccaaggaaataaatacgtcgatcattgtcaaaggccgggtgatatccggtcttttttttgcatgctgtaaaacgagacaaatgaatcagtttgagacaaaacgagacacacgtctcaaactgtctccaaagtgaagatgagaagactgattttacgggctcaaaagactggcacacttcttgcatttataatggtgaaccctaaatagaaggaggcgcacaaaAGATCTCTTAAGTTCGAACTCGAGCCATGGAAAGGATTTTTCGCTACGCTCAAATCCTTTAAAAAAACACAAAAGACCACATTTTTTAATGTGGTCTTTATTCTTCAACTAAAGCACCCATTAGTTCAACAAACGAAAATTGGATAAAGTGGGATATTTTTAAAATATATATTTATGTTACAGTAATATTGACTTTTAAAAAAGGATTGATTCTAATGAAGAAAGCAGACAAGTAAGCCTCCTAAATTCACTTTAGATAAAAATTTAGGAGGCATATCAAATGAACTTTAATAAAATTGATTTAGACAATTGGAAGAGAAAAGAGATATTTAATCATTATTTGAACCAACAAACGACTTTTAGTATAACCACAGAAATTGATATTAGTGTTTTATACCGAAACATAAAACAAGAAGGATATAAATTTTACCCTGCATTTATTTTCTTAGTGACAAGGGTGATAAACTCAAATACAGCTTTTAGAACTGGTTACAATAGCGACGGAGAGTTAGGTTATTGGGATAAGTTAGAGCCACTTTATACAATTTTTGATGGTGTATCTAAAACATTCTCTGGTATTTGGACTCCTGTAAAGAATGACTTCAAAGAGTTTTATGATTTATACCTTTCTGATGTAGAGAAATATAATGGTTCGGGGAAATTGTTTCCCAAAACACCTATACCTGAAAATGCTTTTTCTCTTTCTATTATTCCATGGACTTCATTTACTGGGTTTAACTTAAATATCAATAATAATAGTAATTACCTTCTACCCATTATTACAGCAGGAAAATTCATTAATAAAGGTAATTCAATATATTTACCGCTATCTTTACAGGTACATCATTCTGTTTGTGATGGTTATCATGCAGGATTGTTTATGAACTCTATTCAGGAATTGTCAGATAGGCCTAATGACTGGCTTTTATAATATGAGATAATGCCGACTGTACTTTTTACAGTCGGTTTTCTAATGTCACTAACCTGCCCCGTTAGTTGAAGAAGGTTTTTATATTACAGCTCCAGATCCATATCCTTCTTGCATTGAAAAACCACGAAGATGAAGGAAAACTTGAAGAAGCAAGACAGCGTGTAGCTGCTCTGACTGATAAATTTCCTTTATATAAAGAATTAGATTATTAAGATCCTAAAACCCGCTTGGGCTTATGCCCGGCGGGTTTTTTGACGATGTTCTTGAAACTCAATGTCTTTTTTTGTAGAATCAATAGAAGTGTGTAATTGTTGATGGGACAATAAAAAAGGAGCTGAAACACAGTATGGGAAAGGTTTATGTATTTGATCATCCTTTAATTCAGCACAAGCTGACATATATACGGAATGAAAATACAGGTACGAAGGATTTTAGAGAGTTAGTAGATGAAGTGGCTACACTCATGGCATTTGAAATTACCCGCGATCTTCCTCTGGAAGAAGTGGATATCAATACACCGGTTCAGGCTGCGAAATCGAAAGTCATCTCAGGGAAAAAACTCGGAGTGGTTCCTATCCTCAGAGCAGGATTGGGAATGGTTGACGGCATTTTAAAGCTGATTCCTGCGGCAAAAGTGGGACATGTCGGCCTTTACCGTGATCCAGAAACCTTAAAACCCGTGGAATACTATGTCAAGCTTCCTTCTGATGTGGAAGAGCGTGAATTCATCGTGGTTGACCCGATGCTCGCTACAGGCGGTTCCGCAGTTGAAGCCATTCACAGCCTTAAAAAACGCGGTGCGAAAAATATCCGTTTCATGTGTCTTGTAGCAGCGCCGGAGGGTGTGGAAGAATTGCAGAAGCATCATTCGGACGTTGATATTTACATTGCGGCGCTAGATGAAAAATTAAATGAAAAAGGATATATTGTTCCAGGTCTCGGAGATGCGGGTGACCGCATGTTTGGAACAAAATAAAAAATGAAATCCCCAAAAGGGGGTTTCATTTTTTTATCCAGTTTTTTGCTATTCGGTGAATCTGTATACAATTATAGGTGAAAATGTGAACATTCTGTGGAGACGTAAAGTTAGGGATAACAGGGTAATGCATGCCTGCAGgtgaaccctaaatagaaggaggcgcacaaagagatggcgagagtcataagcatgtcagacgcgatcaatgaagcaatgaagcttgcgatgagaaaagacgaaaatgtgcttttgatcggtgaggatgtcgccgggggagcggcggtcgatcatttgcaggatgatgaagcatggggcggtgtattaggggtcacaaagggactcgtacaggaattcgggcgtacaagagtgctggacactccgatttctgaggcaggctatatgggagcggctatggctgcggcatcaaccggtttgagaccgattgccgagctgatgtttaacgattttatcggcacgtgctttgatcaggtgatcaaccaaggggcgaaattccgttatatgttcggcggaaaagcgcaagtgccgattaccgtccgcaccacatacggagcagggttccgggccgctgcccagcattcacaatcgctgtatggccttttcacgagcatccctggactgaagacagttgttccatccaatccgtatgatgccaaaggtcttttgcttgcagcaatagaagataatgatccggtgtttttctttgaagacaaaacgtcctacaacatgaagggcgaggtgccggaagattattatacaattcccctcggaaaagcggatatcaaacgcgaaggcaatgatgttacgctctttgcagtcggcaagcaggtcaatactgcgcttgaagcggctgcacagctttcagagaggggcatcgaagccgaggtccttgatccccgcagtctgtctcctctggatgaggatgcgattttcacatcgttagaaaaaacaaaccggctgatcatcattgatgaagccaatccgcgatgcagcattgccacggatattgctgcgcttgtcgctgacaagggctttgatttgcttgatgcgccgattaaacggattacagcgccgcatacaccggttccgttttcaccagtgcttgaagatcaatatttgccgacaccagataaaattgtcagcgtcacgcttgaattgcttggcGTCGACTCTAGAGGATCCCCGGGTACCGAGCTCGAATTCGTAATCATGGTCATAGCTGTTTCCTGTGTGAAATTGTTATCCGCTCACAATTCCACACAACATACGAGCCGGAAGCATAAAGTGTAAAGCCTGGGGTGCCTAATGAGTGAGCTAACTCACATTAATTGCGTTGCGCTCACTGCCCGCTTTCCAGTCGGGAAACCTGTCGTGCCAGCTGCATTAATGAATCGGCCAACGCGCGGGGAGAGGCGGTTTGCGTATTGGGCGCTCTTCCGCTTCCTCGCTCACTGACTCGCTGCGCTCGGTCGTTCGGCTGCGGCGAGCGGTATCAGCTCACTCAAAGGCGGTAATACGGTTATCCACAGAATCAGGGGATAACGCAGGAAAGAACATGTGAGCAAAAGGCCAGCAAAAGGCCAGGAACCGTAAAAAGGCCGCGTTGCTGGCGTTTTTCCATAGGCTCCGCCCCCCTGACGAGCATCACAAAAATCGACGCTCAAGTCAGAGGTGGCGAAACCCGACAGGACTATAAAGATACCAGGCGTTTCCCCCTGGAAGCTCCCTCGTGCGCTCTCCTGTTCCGACCCTGCCGCTTACCGGATACCTGTCCGCCTTTCTCCCTTCGGGAAG",
+        "params": [
+            {
+                "name": "uha",
+                "start": "299",
+                "end": "1280",
+                "direction": 1,
+                "color": "red"
+            },
+            {
+                "name": "dha",
+                "start": "3358",
+                "end": "4372",
+                "direction": 1,
+                "color": "red"
+            },
+            {
+                "name": "screeningmarker",
+                "start": "1280",
+                "end": "3328",
+                "direction": 1,
+                "color": "pink"
+            },
+            {
+                "name": "seq_dr",
+                "start": "1250",
+                "end": "1280",
+                "direction": 1,
+                "color": "brown"
+            },
+            {
+                "name": "seq_dr",
+                "start": "3328",
+                "end": "3358",
+                "direction": 1,
+                "color": "brown"
+            },
+            {
+                "name": "test-primer-1",
+                "start": "1150",
+                "end": "1172",
+                "direction": 1,
+                "color": "orange"
+            },
+            {
+                "name": "test-primer-2",
+                "start": "2357",
+                "end": "2378",
+                "direction": -1,
+                "color": "orange"
+            }
+        ]
+    }
+]

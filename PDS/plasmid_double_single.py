@@ -1154,69 +1154,70 @@ def generate_visualize_file(key1,dict_input_seq,plasmidseq,screeningmarker_seq,c
     
     # 4. verify2 visualize
     # v2_seq = dict_input_seq["uha_upstream"]+ targetseq[:seq_uha_left_point] + uha + alt + dha + targetseq[seq_dha_right_point + 1 :]  + dict_input_seq["dha_downstream"]
-    v2_seq = dict_input_seq["uha_upstream"]+ targetseq + dict_input_seq["dha_downstream"]
-    
-    ## 4.1 uha
-    tmp ={}
-    tmp["name"] = "Verify2"
-    tmp["detail"] = "Verification of the 2nd-round of crossover and isolation. The upstream homologous arm (UHA), the downstream homologous arm (DHA) and test-primer-3/4 are visualized."
-    tmp["seq"] = v2_seq
-    tmp["params"] = [
-        {
-            "name":"uha",
-            "start":str(v2_seq.find(uha)),
-            "end":str(v2_seq.find(uha) + len(uha)),
-            'direction':1,
-            'color':'red',
-        }
-    ]
-    
-    ## 4.2 dha
-    tmp["params"].append(
-        {
-            "name":"dha",
-            "start":str(v2_seq.find(dha)),
-            "end":str(v2_seq.find(dha) + len(dha)),
-            'direction':1,
-            'color':'red',
-        }
-    )
-    ## Inserted fragment
-    if mutation_type in ['substitution','insertion']:
-        tmp["params"].append(
-        {
-            "name":"Inserted fragment",
-            "start":str(v2_seq.find(uha) + len(uha)),
-            "end":str(v2_seq.find(dha)),
-            'direction':1,
-            'color':'green',
-        }
-    )
-    ## 4.3 v2 primer1
-    v2_primer1 = dict_verify2['PRIMER_LEFT_0_SEQUENCE']
-    tmp["params"].append(
-        {
-            "name":"test-primer-3",
-            "start":str(v2_seq.find(v2_primer1)),
-            "end":str(v2_seq.find(v2_primer1) + len(v2_primer1)),
-            'direction':1,
-            'color':'orange',
-        }
-    )
-    
-    ## 4.4 v2 primer2
-    v2_primer2 = dict_verify2['PRIMER_RIGHT_0_SEQUENCE']
-    v2_primer2_rev =revComp(v2_primer2)
-    tmp["params"].append(
-        {
-            "name":"test-primer-4",
-            "start":str(v2_seq.find(v2_primer2_rev)),
-            "end":str(v2_seq.find(v2_primer2_rev) + len(v2_primer2_rev)),
-            'direction':-1,
-            'color':'orange',
-        }
-    )
     if not (screening_maker_removal == "No" and mutation_type == "deletion"):
+        v2_seq = dict_input_seq["uha_upstream"]+ targetseq + dict_input_seq["dha_downstream"]
+        
+        ## 4.1 uha
+        tmp ={}
+        tmp["name"] = "Verify2"
+        tmp["detail"] = "Verification of the 2nd-round of crossover and isolation. The upstream homologous arm (UHA), the downstream homologous arm (DHA) and test-primer-3/4 are visualized."
+        tmp["seq"] = v2_seq
+        tmp["params"] = [
+            {
+                "name":"uha",
+                "start":str(v2_seq.find(uha)),
+                "end":str(v2_seq.find(uha) + len(uha)),
+                'direction':1,
+                'color':'red',
+            }
+        ]
+        
+        ## 4.2 dha
+        tmp["params"].append(
+            {
+                "name":"dha",
+                "start":str(v2_seq.find(dha)),
+                "end":str(v2_seq.find(dha) + len(dha)),
+                'direction':1,
+                'color':'red',
+            }
+        )
+        ## Inserted fragment
+        if mutation_type in ['substitution','insertion']:
+            tmp["params"].append(
+            {
+                "name":"Inserted fragment",
+                "start":str(v2_seq.find(uha) + len(uha)),
+                "end":str(v2_seq.find(dha)),
+                'direction':1,
+                'color':'green',
+            }
+        )
+        ## 4.3 v2 primer1
+        v2_primer1 = dict_verify2['PRIMER_LEFT_0_SEQUENCE']
+        tmp["params"].append(
+            {
+                "name":"test-primer-3",
+                "start":str(v2_seq.find(v2_primer1)),
+                "end":str(v2_seq.find(v2_primer1) + len(v2_primer1)),
+                'direction':1,
+                'color':'orange',
+            }
+        )
+        
+        ## 4.4 v2 primer2
+        v2_primer2 = dict_verify2['PRIMER_RIGHT_0_SEQUENCE']
+        v2_primer2_rev =revComp(v2_primer2)
+        tmp["params"].append(
+            {
+                "name":"test-primer-4",
+                "start":str(v2_seq.find(v2_primer2_rev)),
+                "end":str(v2_seq.find(v2_primer2_rev) + len(v2_primer2_rev)),
+                'direction':-1,
+                'color':'orange',
+            }
+        )
+    
         visualize_list.append(tmp)
     
     # write to json
@@ -1278,6 +1279,7 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
         '\t'.join(headers) + "\n"
     )
     for key1 in dict_input_seq:
+        print(key1)
         dict_inserted_primers_attribute ={}
         dictscreeningmarkerprimers=primerDesign(key1,screeningmarker_seq,config,"screening_marker")
         if len(dictscreeningmarkerprimers)<10:
@@ -1353,6 +1355,7 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
                     else:
                         if dict_input_seq[key1]['type']=="deletion" and screening_maker_removal=="No":
                             primers_submitted_output(dict_left_primers_attribute,dict_right_primers_attribute,dict_screening_marker_primers_attribute,primer_order_fsave,dict_verify1=dict_verify1_primers_attribute)
+                            dict_verify2_primers_attribute = {}
                         else:
                             seq_verify2_temp = dict_left_primers_attribute['SEQ_VERIFY2_TEMP_UHA_HALF'] + dict_right_primers_attribute['SEQ_VERIFY2_TEMP_DHA_HALF']
                             dictverify2primers=primerDesign(key1,seq_verify2_temp,config,"verify_2")
