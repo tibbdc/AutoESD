@@ -548,7 +548,7 @@ def genOutputFile(dict_primers_whole,workdir):
                 pd.read_json(json.dumps(dict_primers_whole[kind][sub_kind])).to_excel(writer_failed, "Failed_task_for_"+sub_kind)
             writer_failed.save()
 
-def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_screeningmarker,dict_verify1,dict_verify2,fsave,workdir,dict_insert={},screening_maker_removal=None):
+def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_screeningmarker,dict_verify1,fsave,workdir,dict_verify2={},dict_insert={},screening_maker_removal=None):
     """
     Arguments:
         key1[str]: seq id
@@ -696,91 +696,93 @@ def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_
 
     # 3.Fragment for 2nd double crossover
     # for alter sequence, manipulation sequence
-    ref_manipulation_seq = uha + alt + dha
-    
-    ## 3.1 uha
-    tmp ={}
-    tmp["name"] = "Fragment for 2nd crossover" 
-    tmp["detail"] = "PCR product or synthesized ssDNA. The upstream homologous arm (UHA), the downstream homologous arm (DHA), inserted sequence and primer-5/6 (for long fragment insertion or substitution or just one single ssDNA for short inserted sequence) are visualized." 
-    tmp["seq"] = ref_manipulation_seq
-    tmp["params"] = [
-        {
-            'name':"uha",
-            'start':str(ref_manipulation_seq.find(uha)),
-            'end':str(ref_manipulation_seq.find(uha) + len(uha)),
-            'direction':1,
-            'color':'red',
-        }
-    ]
-    
-    ## 3.2 dha
-    tmp["params"].append(
-        {
-            "name":"dha",
-            "start":str(ref_manipulation_seq.find(dha)),
-            "end":str(ref_manipulation_seq.find(dha) + len(dha)),
-            'direction':1,
-            'color':'red',
-        }
-    )
-
-    # 3.3 seq_altered
-    if mutation_type != "deletion":
-        tmp["params"].append(
-            {
-                "name":"seq_altered",
-                "start":str(ref_manipulation_seq.find(uha) + len(uha)),
-                "end":str(ref_manipulation_seq.find(dha)),
-                'direction':1,
-                'color':'pink',
-            }
-        )
-    # 增加ssDNA
-    if dict_input_seq["level"] == "<=length_homologous_sequence":
-        tmp["params"].append(
-        {
-            "name":"ssDNA",
-            "start":str(ref_manipulation_seq.find(uha)),
-            "end":str(ref_manipulation_seq.find(dha) + len(dha)),
-            'direction':1,
-            'color':'#6c757d', 
-        }
-    )
-
-    # 插入序列的引物
-    if dict_insert:
-        # 3.5 primer5
-        primer5 = dict_insert['PRIMER_LEFT_WHOLE_SEQUENCE']
-        tmp["params"].append(
-            {
-                "name":"primer-5",
-                # "start":str(ref_manipulation_seq.find(primer5)),
-                "start":str(ref_manipulation_seq.find(uha) + len(uha)),
-                # "end":str(ref_manipulation_seq.find(primer5) + len(primer5)),
-                "end":str(ref_manipulation_seq.find(uha) + len(uha) + len(primer5)),
-                'direction':1,
-                'color':'#0dcaf0',
-            }
-        )
-
-        # 3.6 primer6
-        primer6 = dict_insert['PRIMER_RIGHT_WHOLE_SEQUENCE']
-        primer6_rev = revComp(primer6)
-        tmp["params"].append(
-            {
-                "name":"primer-6",
-                # "start":str(ref_manipulation_seq.find(primer6_rev)),
-                "start":str(ref_manipulation_seq.find(dha) - len(primer6)),
-                # "end":str(ref_manipulation_seq.find(primer6_rev) + len(primer6_rev)),
-                "end":str(ref_manipulation_seq.find(dha)),
-                'direction':-1,
-                'color':'#0dcaf0',
-            }
-        )
-    else:
-        primer5 =""
-        primer6 =""
     if not (screening_maker_removal == "No" and mutation_type == "deletion"):
+        ref_manipulation_seq = uha + alt + dha
+        
+        ## 3.1 uha
+        tmp ={}
+        tmp["name"] = "Fragment for 2nd crossover" 
+        tmp["detail"] = "PCR product or synthesized ssDNA. The upstream homologous arm (UHA), the downstream homologous arm (DHA), inserted sequence and primer-5/6 (for long fragment insertion or substitution or just one single ssDNA for short inserted sequence) are visualized." 
+        tmp["seq"] = ref_manipulation_seq
+        tmp["params"] = [
+            {
+                'name':"uha",
+                'start':str(ref_manipulation_seq.find(uha)),
+                'end':str(ref_manipulation_seq.find(uha) + len(uha)),
+                'direction':1,
+                'color':'red',
+            }
+        ]
+        
+        ## 3.2 dha
+        tmp["params"].append(
+            {
+                "name":"dha",
+                "start":str(ref_manipulation_seq.find(dha)),
+                "end":str(ref_manipulation_seq.find(dha) + len(dha)),
+                'direction':1,
+                'color':'red',
+            }
+        )
+
+        # 3.3 seq_altered
+        if mutation_type != "deletion":
+            tmp["params"].append(
+                {
+                    "name":"seq_altered",
+                    "start":str(ref_manipulation_seq.find(uha) + len(uha)),
+                    "end":str(ref_manipulation_seq.find(dha)),
+                    'direction':1,
+                    'color':'pink',
+                }
+            )
+        # 增加ssDNA
+        if dict_input_seq["level"] == "<=length_homologous_sequence":
+            tmp["params"].append(
+            {
+                "name":"ssDNA",
+                "start":str(ref_manipulation_seq.find(uha)),
+                "end":str(ref_manipulation_seq.find(dha) + len(dha)),
+                'direction':1,
+                'color':'#6c757d', 
+            }
+        )
+
+        # 插入序列的引物
+        if dict_insert:
+            # 3.5 primer5
+            primer5 = dict_insert['PRIMER_LEFT_WHOLE_SEQUENCE']
+            tmp["params"].append(
+                {
+                    "name":"primer-5",
+                    "start":str(ref_manipulation_seq.find(primer5)),
+                    # "start":str(ref_manipulation_seq.find(uha) + len(uha)),
+                    # "start":str(ref_manipulation_seq.find(uha)),
+                    "end":str(ref_manipulation_seq.find(primer5) + len(primer5)),
+                    # "end":str(ref_manipulation_seq.find(uha) + len(uha) + len(primer5)),
+                    'direction':1,
+                    'color':'#0dcaf0',
+                }
+            )
+
+            # 3.6 primer6
+            primer6 = dict_insert['PRIMER_RIGHT_WHOLE_SEQUENCE']
+            primer6_rev = revComp(primer6)
+            tmp["params"].append(
+                {
+                    "name":"primer-6",
+                    "start":str(ref_manipulation_seq.find(primer6_rev)),
+                    # "start":str(ref_manipulation_seq.find(dha) - len(primer6)),
+                    "end":str(ref_manipulation_seq.find(primer6_rev) + len(primer6_rev)),
+                    # "end":str(ref_manipulation_seq.find(dha)),
+                    # "end":str(ref_manipulation_seq.find(dha) + len(dha)),
+                    'direction':-1,
+                    'color':'#0dcaf0',
+                }
+            )
+        else:
+            primer5 =""
+            primer6 =""
         visualize_list.append(tmp)
     
     # 4. verify1 visualize
@@ -850,69 +852,69 @@ def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_
     
     # 5. verify2 visualize
     # verify2 验证
-    v2_seq = dict_input_seq["seq_uha_verify"]+ alt + dict_input_seq["seq_dha_verify"]
-    
-    ## 5.1 uha
-    tmp ={}
-    tmp["name"] = "Verify2"
-    tmp["detail"] = "Verification of the 2nd-round of double crossover and isolation. The upstream homologous arm (UHA), the downstream homologous arm (DHA) and test-primer-3/4 are visualized."
-    tmp["seq"] = v2_seq
-    tmp["params"] = [
-        {
-            "name":"uha",
-            "start":str(v2_seq.find(uha)),
-            "end":str(v2_seq.find(uha) + len(uha)),
-            'direction':1,
-            'color':'red',
-        }
-    ]
-    
-    ## 5.2 dha
-    tmp["params"].append(
-        {
-            "name":"dha",
-            "start":str(v2_seq.find(dha)),
-            "end":str(v2_seq.find(dha) + len(dha)),
-            'direction':1,
-            'color':'red',
-        }
-    )
-    ## 5.3 Inserted fragment
-    if mutation_type in ['substitution','insertion']:
-        tmp["params"].append(
-        {
-            "name":"Inserted fragment",
-            "start":str(v2_seq.find(uha) + len(uha)),
-            "end":str(v2_seq.find(dha)),
-            'direction':1,
-            'color':'green',
-        }
-    )
-    ## 5.4 v2 primer1
-    v2_primer1 = dict_verify2['PRIMER_LEFT_0_SEQUENCE']
-    tmp["params"].append(
-        {
-            "name":"test-primer-3",
-            "start":str(v2_seq.find(v2_primer1)),
-            "end":str(v2_seq.find(v2_primer1) + len(v2_primer1)),
-            'direction':1,
-            'color':'orange',
-        }
-    )
-    
-    ## 5.5 v2 primer2
-    v2_primer2 = dict_verify2['PRIMER_RIGHT_0_SEQUENCE']
-    v2_primer2_rev =revComp(v2_primer2)
-    tmp["params"].append(
-        {
-            "name":"test-primer-4",
-            "start":str(v2_seq.find(v2_primer2_rev)),
-            "end":str(v2_seq.find(v2_primer2_rev) + len(v2_primer2_rev)),
-            'direction':-1,
-            'color':'orange',
-        }
-    )
     if not (screening_maker_removal == "No" and mutation_type == "deletion"):
+        v2_seq = dict_input_seq["seq_uha_verify"]+ alt + dict_input_seq["seq_dha_verify"]
+        
+        ## 5.1 uha
+        tmp ={}
+        tmp["name"] = "Verify2"
+        tmp["detail"] = "Verification of the 2nd-round of double crossover and isolation. The upstream homologous arm (UHA), the downstream homologous arm (DHA) and test-primer-3/4 are visualized."
+        tmp["seq"] = v2_seq
+        tmp["params"] = [
+            {
+                "name":"uha",
+                "start":str(v2_seq.find(uha)),
+                "end":str(v2_seq.find(uha) + len(uha)),
+                'direction':1,
+                'color':'red',
+            }
+        ]
+        
+        ## 5.2 dha
+        tmp["params"].append(
+            {
+                "name":"dha",
+                "start":str(v2_seq.find(dha)),
+                "end":str(v2_seq.find(dha) + len(dha)),
+                'direction':1,
+                'color':'red',
+            }
+        )
+        ## 5.3 Inserted fragment
+        if mutation_type in ['substitution','insertion']:
+            tmp["params"].append(
+            {
+                "name":"Inserted fragment",
+                "start":str(v2_seq.find(uha) + len(uha)),
+                "end":str(v2_seq.find(dha)),
+                'direction':1,
+                'color':'green',
+            }
+        )
+        ## 5.4 v2 primer1
+        v2_primer1 = dict_verify2['PRIMER_LEFT_0_SEQUENCE']
+        tmp["params"].append(
+            {
+                "name":"test-primer-3",
+                "start":str(v2_seq.find(v2_primer1)),
+                "end":str(v2_seq.find(v2_primer1) + len(v2_primer1)),
+                'direction':1,
+                'color':'orange',
+            }
+        )
+        
+        ## 5.5 v2 primer2
+        v2_primer2 = dict_verify2['PRIMER_RIGHT_0_SEQUENCE']
+        v2_primer2_rev =revComp(v2_primer2)
+        tmp["params"].append(
+            {
+                "name":"test-primer-4",
+                "start":str(v2_seq.find(v2_primer2_rev)),
+                "end":str(v2_seq.find(v2_primer2_rev) + len(v2_primer2_rev)),
+                'direction':-1,
+                'color':'orange',
+            }
+        )
         visualize_list.append(tmp)
     
     # write to json
@@ -1020,6 +1022,21 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
                             dict_verify2_primers_attribute = verify2PrimerAttribute(key1,dictverify2primers,seq_verify2_temp)
                             dict_primers_whole['successful']['verify2'].append(dict_verify2_primers_attribute)
                             primers_submitted_output(dict_screening_marker_primers_attribute,dict_verify1_primers_attribute,primer_order_fsave,dict_verify2_primers_attribute,dict_inserted_primers_attribute)
+                            # visualize
+                            generate_visualize_file(
+                                key1,
+                                dict_input_seq[key1],
+                                screeningmarker_seq,
+                                config,
+                                dict_screening_marker_primers_attribute,
+                                dict_verify1_primers_attribute,
+                                visualize_fsave,
+                                workdir,
+                                dict_verify2_primers_attribute,
+                                dict_inserted_primers_attribute,
+                                screening_maker_removal
+                                )
+
             else:
                 seq_verify1_temp = screeningmarker_seq[-400:] + dict_input_seq[key1]["seq_dha_verify"]
                 dictverify1primers=primerDesign(key1,seq_verify1_temp,config,"verify1")
@@ -1037,6 +1054,18 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
                     dict_primers_whole['successful']['verify1'].append(dict_verify1_primers_attribute)
                     if dict_input_seq[key1]['type']=="deletion" and screening_maker_removal=="No":
                         primers_submitted_output(dict_screening_marker_primers_attribute,dict_verify1_primers_attribute,primer_order_fsave)
+                        # visualize
+                        generate_visualize_file(
+                            key1,
+                            dict_input_seq[key1],
+                            screeningmarker_seq,
+                            config,
+                            dict_screening_marker_primers_attribute,
+                            dict_verify1_primers_attribute,
+                            visualize_fsave,
+                            workdir,
+                            screening_maker_removal = screening_maker_removal
+                            )
                     else:
                         seq_verify2_temp = dict_input_seq[key1]["seq_uha_verify"] + dict_input_seq[key1]['seq_altered'] + dict_input_seq[key1]["seq_dha_verify"]
                         dictverify2primers=primerDesign(key1,seq_verify2_temp,config,"verify2")
@@ -1049,20 +1078,19 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
                             dict_verify2_primers_attribute = verify2PrimerAttribute(key1,dictverify2primers,seq_verify2_temp)
                             dict_primers_whole['successful']['verify2'].append(dict_verify2_primers_attribute)
                             primers_submitted_output(dict_screening_marker_primers_attribute,dict_verify1_primers_attribute,primer_order_fsave,dict_verify2_primers_attribute)
-            # visualize
-            generate_visualize_file(
-                key1,
-                dict_input_seq[key1],
-                screeningmarker_seq,
-                config,
-                dict_screening_marker_primers_attribute,
-                dict_verify1_primers_attribute,
-                dict_verify2_primers_attribute,
-                visualize_fsave,
-                workdir,
-                dict_inserted_primers_attribute,
-                screening_maker_removal
-                )
+                            # visualize
+                            generate_visualize_file(
+                                key1,
+                                dict_input_seq[key1],
+                                screeningmarker_seq,
+                                config,
+                                dict_screening_marker_primers_attribute,
+                                dict_verify1_primers_attribute,
+                                visualize_fsave,
+                                workdir,
+                                dict_verify2 = dict_verify2_primers_attribute,
+                                screening_maker_removal =screening_maker_removal
+                                )
     #print(dict_primers_whole['successful']['dha'])
     # 保存文件
     blast_input_file.close()

@@ -1,3 +1,1 @@
 ID	ERROR
-b0001	The length of upstream sequence of manipulation site of b0001 must be larger than sum of 'Max Length of UHA' and 'Max Length of UIS'.
-b0002	The length of upstream sequence of manipulation site of b0002 must be larger than sum of 'Max Length of UHA' and 'Max Length of UIS'.

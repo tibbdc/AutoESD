@@ -696,7 +696,7 @@ def genOutputFile(dict_primers_whole,workdir):
                 pd.read_json(json.dumps(dict_primers_whole[kind][sub_kind])).to_excel(writer_failed, "Failed_task_for_"+sub_kind)
             writer_failed.save()
 
-def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_left_primer,dict_right_primer,dict_uha,dict_dha,dict_screeningmarker,dict_verify2,fsave,workdir,dict_insert={}):
+def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_left_primer,dict_right_primer,dict_uha,dict_dha,dict_screeningmarker,dict_verify2,fsave,workdir,dict_insert={},screening_maker_removal=None):
     """
     Arguments:
         key1[str]: seq id
@@ -983,7 +983,10 @@ def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_
     
     # 4. verify2 visualize
     # v2_seq = dict_input_seq["uha_upstream"]+ targetseq[:seq_uha_left_point] + uha + alt + dha + targetseq[seq_dha_right_point + 1 :]  + dict_input_seq["dha_downstream"]
-    v2_seq = dict_input_seq["uha_upstream"]+ targetseq + dict_input_seq["dha_downstream"]
+    if screening_maker_removal == "No" and mutation_type == "deletion":
+        v2_seq = dict_input_seq["uha_upstream"]+ targetseq + screeningmarker_seq + dict_input_seq["dha_downstream"]
+    else:  
+        v2_seq = dict_input_seq["uha_upstream"]+ targetseq + dict_input_seq["dha_downstream"]
     
     ## 4.1 uha
     tmp ={}
@@ -1021,6 +1024,17 @@ def generate_visualize_file(key1,dict_input_seq,screeningmarker_seq,config,dict_
             'color':'green',
         }
     )
+    # screeningmarker_seq
+    if screening_maker_removal == "No" and mutation_type == "deletion":
+        tmp["params"].append(
+            {
+                "name":"screeningmarker",
+                "start":str(v2_seq.find(screeningmarker_seq)),
+                "end":str(v2_seq.find(screeningmarker_seq) + len(screeningmarker_seq)),
+                'direction':1,
+                'color':'pink',
+            }
+        )
     ## 4.3 v2 primer1
     v2_primer1 = dict_verify2['PRIMER_LEFT_0_SEQUENCE']
     tmp["params"].append(
@@ -1194,7 +1208,8 @@ def design_process(input_file_path,screeningmarker_file_path,workdir,ref_genome,
                         dict_verify2_primers_attribute,
                         visualize_fsave,
                         workdir,
-                        dict_inserted_primers_attribute
+                        dict_inserted_primers_attribute,
+                        screening_maker_removal
                         )
     #print(dict_primers_whole['successful']['dha'])
     # 保存文件

@@ -215,13 +215,6 @@
                 "color": "red"
             },
             {
-                "name": "seq_altered",
-                "start": "1180",
-                "end": "2737",
-                "direction": 1,
-                "color": "pink"
-            },
-            {
                 "name": "test-primer-3",
                 "start": "97",
                 "end": "117",

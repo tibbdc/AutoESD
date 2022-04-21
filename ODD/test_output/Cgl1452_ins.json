@@ -83,15 +83,15 @@
             },
             {
                 "name": "primer-5",
-                "start": "30",
-                "end": "82",
+                "start": "0",
+                "end": "52",
                 "direction": 1,
                 "color": "#0dcaf0"
             },
             {
                 "name": "primer-6",
-                "start": "1536",
-                "end": "1587",
+                "start": "1566",
+                "end": "1617",
                 "direction": -1,
                 "color": "#0dcaf0"
             }
