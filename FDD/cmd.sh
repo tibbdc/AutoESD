@@ -1,1 +1,1 @@
-python fragment_double_double.py -i test_input/FDD_eco_input_example.csv  -s test_input/FDD_eco_screening_marker.txt -r test_input/Ec_MG1655.fna  -c test_input/config.txt -d test_output  -u "CCGGAAACTCCGCTGGGCGA" -m "No"
+python fragment_double_double.py -i test_input/FDD_eco_input_example.csv  -s test_input/FDD_eco_screening_marker.txt -r test_input/Ec_MG1655.fna  -c test_input/config.txt -d test_output  -u "CCGGAAACTCCGCTGGGCGA" -m "Yes"
