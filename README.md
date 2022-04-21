@@ -7,6 +7,7 @@ AutoESDv1 enables users to perform the precise, automated and high-throughput de
 ## Installation
 
 ### python packages
+We suggest using Python 3.8 for AutoESD.
 
 ```shell
 pip install -r requirements.txt
